@@ -17,6 +17,7 @@ jobs:
       - name: Install Dependencies
         run: |
           uname -m
+          csrutil status
           brew install ldid dpkg fakeroot
       - name: Clone Theos
         run: |

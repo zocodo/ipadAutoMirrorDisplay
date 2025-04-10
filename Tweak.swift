@@ -1,43 +1,30 @@
-// Tweak.swift
+import Orion
 import UIKit
-import Foundation
 
-// 私有接口声明
-class SBExternalDisplayManager {
-    static let sharedInstance = SBExternalDisplayManager()
-    
-    func setWantsExtendedDisplay(_ extend: Bool) {
-        // 实现设置扩展显示的逻辑
+class DisplayManager: NSObject {
+    override init() {
+        super.init()
+        NotificationCenter.default.addObserver(self, selector: #selector(screenDidConnect), name: UIScreen.didConnectNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(screenDidDisconnect), name: UIScreen.didDisconnectNotification, object: nil)
     }
-}
 
-// 读取配置
-func isMirrorModeEnabled() -> Bool {
-    return UserDefaults.standard.bool(forKey: "mirrorMode")
-}
+    @objc func screenDidConnect(notification: Notification) {
+        setDisplayToMirrorMode()
+    }
 
-func isLoggingEnabled() -> Bool {
-    return UserDefaults.standard.bool(forKey: "logEnabled")
-}
+    @objc func screenDidDisconnect(notification: Notification) {
+        // 处理显示器断开连接的逻辑
+    }
 
-func logIfEnabled(_ format: String, _ args: CVarArg...) {
-    guard isLoggingEnabled() else { return }
-    let logMessage = String(format: "[AutoMirrorDisplay] \(format)", arguments: args)
-    print(logMessage)
-}
+    func setDisplayToMirrorMode() {
+        guard let displayManagerClass = NSClassFromString("SBExternalDisplayManager") as? NSObject.Type,
+              let sharedInstance = displayManagerClass.perform(NSSelectorFromString("sharedInstance"))?.takeUnretainedValue() else {
+            return
+        }
 
-// Hook SpringBoard
-class SpringBoard {
-    func applicationDidFinishLaunching(_ application: Any) {
-        // ... existing code ...
-        
-        let mirror = isMirrorModeEnabled()
-        let mgr = SBExternalDisplayManager.sharedInstance
-        // mirror==true 时要镜像，内部 API 用 setWantsExtendedDisplay(false)；mirror==false 时扩展，用 true
-        mgr.setWantsExtendedDisplay(!mirror)
-
-        logIfEnabled("Display mode set to %@", mirror ? "Mirror" : "Extend")
-        
-        // ... existing code ...
+        let selector = NSSelectorFromString("setWantsExtendedDisplay:")
+        if sharedInstance.responds(to: selector) {
+            sharedInstance.perform(selector, with: false)
+        }
     }
 }

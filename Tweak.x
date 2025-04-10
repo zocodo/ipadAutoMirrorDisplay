@@ -1,13 +1,13 @@
 #import <UIKit/UIKit.h>
 #import <Foundation/Foundation.h>
 
-// ✅ 私有接口声明
+// 私有接口声明
 @interface SBExternalDisplayManager : NSObject
 + (instancetype)sharedInstance;
 - (void)setWantsExtendedDisplay:(BOOL)extend;
 @end
 
-// ✅ 配置读取
+// 读取配置
 static BOOL IsMirrorModeEnabled() {
     return [[NSUserDefaults standardUserDefaults] boolForKey:@"mirrorMode"];
 }
@@ -29,6 +29,7 @@ static void LogIfEnabled(NSString *format, ...) {
 
     BOOL mirror = IsMirrorModeEnabled();
     SBExternalDisplayManager *mgr = [%c(SBExternalDisplayManager) sharedInstance];
+    // mirror==YES 时要镜像，内部 API 用 setWantsExtendedDisplay:NO；mirror==NO 时扩展，用 YES
     [mgr setWantsExtendedDisplay:!mirror];
 
     LogIfEnabled(@"Display mode set to %@", mirror ? @"Mirror" : @"Extend");

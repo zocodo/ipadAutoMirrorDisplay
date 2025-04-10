@@ -33,7 +33,7 @@ static void LogIfEnabled(NSString *format, ...) {
     CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(),
                                     NULL,
                                     (CFNotificationCallback)handlePreferencesChanged,
-                                    CFSTR("com.your.tweak.prefs.changed"),
+                                    CFSTR("com.zocodo.automirrordisplay.prefs.changed"),
                                     NULL,
                                     CFNotificationSuspensionBehaviorDeliverImmediately);
     

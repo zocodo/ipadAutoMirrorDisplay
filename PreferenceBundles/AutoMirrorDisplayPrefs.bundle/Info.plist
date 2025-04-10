@@ -4,7 +4,7 @@
 <plist version="1.0">
 <dict>
     <key>CFBundleIdentifier</key>
-    <string>com.yourcompany.automirrordisplayprefs</string>
+    <string>com.zocodo.automirrordisplayprefs</string>
     <key>CFBundleName</key>
     <string>AutoMirrorDisplay</string>
     <key>CFBundleVersion</key>

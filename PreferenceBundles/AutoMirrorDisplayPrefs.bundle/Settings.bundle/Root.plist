@@ -21,7 +21,7 @@
             <key>Key</key>
             <string>mirrorMode</string>
             <key>DefaultValue</key>
-            <string>NO</string>
+            <string>YES</string>
             <key>Titles</key>
             <array>
                 <string>镜像</string>
@@ -32,6 +32,9 @@
                 <string>YES</string>
                 <string>NO</string>
             </array>
+			<!-- 改动后发通知 -->
+            <key>PostNotification</key>
+            <string>com.zocodo.automirrordisplay.prefs.changed</string>
         </dict>
         <!-- 日志开关 -->
         <dict>
@@ -42,7 +45,10 @@
             <key>Key</key>
             <string>logEnabled</string>
             <key>DefaultValue</key>
-            <true/>
+            <false/>
+			<!-- 改动后发通知 -->
+			<key>PostNotification</key>
+            <string>com.zocodo.automirrordisplay.prefs.changed</string>
         </dict>
     </array>
 </dict>

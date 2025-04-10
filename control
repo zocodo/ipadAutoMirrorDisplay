@@ -1,4 +1,4 @@
-Package: com.yourcompany.automirrordisplay
+Package: com.zocodo.automirrordisplay
 Name: AutoMirrorDisplay
 Version: 1.0.0
 Architecture: iphoneos-arm64

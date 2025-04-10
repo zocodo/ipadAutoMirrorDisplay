@@ -24,7 +24,7 @@ jobs:
         run: |
           git clone https://github.com/theos/sdks.git
           cp -r sdks/* theos/sdks/
-		  
+
       # 编译并打包 .deb
       - name: Build Package
         run: |

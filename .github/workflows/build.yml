@@ -36,9 +36,9 @@ jobs:
               THEOS_PACKAGE_SCHEME=rootless \
               INTERNAL_PACKAGE_METHOD=dpkg-deb
 
-      - name: Upload .deb to GitHub Release
-        uses: softprops/action-gh-release@v2
-        with:
-          files: packages/*.deb
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Upload .deb to GitHub Release
+      uses: softprops/action-gh-release@v2
+      with:
+        files: packages/*.deb
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

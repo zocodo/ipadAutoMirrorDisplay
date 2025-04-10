@@ -1,13 +1,13 @@
 name: Build & Release AutoMirrorDisplay
 
+# 提升权限以允许创建 Release
 permissions:
   contents: write
-  packages: write
 
 on:
   push:
-    # 只有符合 v* 格式的 tag 才会触发 Release
-    tags: ["v*"]
+    # 仅当推送 tag（如 v1.2.3）时触发 release
+    tags: ["v*"] # :contentReference[oaicite:0]{index=0}
   workflow_dispatch:
 
 jobs:
@@ -17,52 +17,58 @@ jobs:
       deb-path: ${{ steps.rename.outputs.deb }}
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-      - name: Install deps
-        run: brew install dpkg ldid
+      - name: Install build deps
+        run: |
+          brew install dpkg ldid
 
       - name: Clone Theos
-        run: git clone --recursive https://github.com/theos/theos.git
+        run: |
+          git clone --recursive https://github.com/theos/theos.git
+          mkdir -p theos/sdks
+          # 可选：下载并解压 iOS 16.5 SDK 到 theos/sdks
 
-      - name: Build .deb
+      - name: Build .deb with dpkg-deb
         run: |
           export THEOS=${{ github.workspace }}/theos
-          make package FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless INTERNAL_PACKAGE_METHOD=dpkg-deb
+          make package FINALPACKAGE=1 \
+               THEOS_PACKAGE_SCHEME=rootless \
+               INTERNAL_PACKAGE_METHOD=dpkg-deb
 
       - name: Rename .deb
         id: rename
         run: |
-          # 取出 tag 名称，比如 v1.0.0
-          TAG=${GITHUB_REF##*/}
-          # 原始文件
+          # 直接使用 GITHUB_REF_NAME 环境变量获取 tag 名称 :contentReference[oaicite:1]{index=1}
+          TAG="$GITHUB_REF_NAME"
           SRC=$(ls packages/*.deb)
-          # 新文件名
           DST="AutoMirrorDisplay-${TAG}.deb"
           mv "$SRC" "packages/${DST}"
-          echo "::set-output name=deb::packages/${DST}"
+          # 将新路径输出供后续步骤使用
+          echo "deb=packages/${DST}" >> $GITHUB_OUTPUT
 
       - name: Upload .deb artifact
         uses: actions/upload-artifact@v4
         with:
-          name: AutoMirrorDisplay-${{ github.ref##*/ }}.deb
+          name: AutoMirrorDisplay-${{ github.ref_name }}.deb # :contentReference[oaicite:2]{index=2}
           path: ${{ steps.rename.outputs.deb }}
 
   release:
     needs: build
     runs-on: ubuntu-latest
-    if: startsWith(github.ref, 'refs/tags/')
+    if: startsWith(github.ref, 'refs/tags/') # 仅在 tag 推送时执行
     steps:
       - name: Download .deb artifact
         uses: actions/download-artifact@v4
         with:
-          name: AutoMirrorDisplay-${{ github.ref##*/ }}.deb
+          name: AutoMirrorDisplay-${{ github.ref_name }}.deb
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ github.ref##*/ }}
-          release_name: AutoMirrorDisplay ${{ github.ref##*/ }}
-          files: AutoMirrorDisplay-${{ github.ref##*/ }}.deb
+          tag_name: ${{ github.ref_name }}
+          release_name: AutoMirrorDisplay ${{ github.ref_name }}
+          files: AutoMirrorDisplay-${{ github.ref_name }}.deb
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

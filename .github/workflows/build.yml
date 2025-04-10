@@ -1,0 +1,35 @@
+name: Build AutoMirrorDisplay
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    # 必须用 macOS 或 Linux runner
+    runs-on: macos-latest
+
+    steps:
+      # 1. 拉取代码
+      - uses: actions/checkout@v3
+
+      # 2. 安装 Theos
+      - name: Setup Theos
+        uses: beerpiss/theos-action@v1
+        with:
+          # 默认就行，一般不需要改
+          theos-dir: theos
+
+      # 3. 编译并打包 .deb
+      - name: Build Package
+        run: |
+          # 确保 Makefile 中已设置 THEOS_PACKAGE_SCHEME = rootless
+          make package FINALPACKAGE=1
+
+      # 4. 上传生成的 .deb 作为构建产物
+      - name: Upload .deb
+        uses: actions/upload-artifact@v3
+        with:
+          name: AutoMirrorDisplay.deb
+          path: packages/*.deb

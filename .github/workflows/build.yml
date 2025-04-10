@@ -16,16 +16,17 @@ jobs:
 
       - name: Install Dependencies
         run: |
+          uname -m
           brew install ldid dpkg fakeroot
       - name: Clone Theos
         run: |
           git clone --recursive https://github.com/theos/theos.git
-  
+
       - name: Debug directory
         run: |
           ls -la
           ls -la theos
-      
+
       - name: Build Package
         run: |
           export THEOS=${{ github.workspace }}/theos
@@ -44,4 +45,3 @@ jobs:
           files: packages/*.deb
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-

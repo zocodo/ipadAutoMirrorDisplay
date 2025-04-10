@@ -21,18 +21,42 @@ static void LogIfEnabled(NSString *format, ...) {
     NSLogv([@"[AutoMirrorDisplay] " stringByAppendingString:format], args);
     va_end(args);
 }
-
 %hook SpringBoard
 
 - (void)applicationDidFinishLaunching:(id)application {
     %orig;
 
+    // 注册默认设置
+    [[NSUserDefaults standardUserDefaults] registerDefaults:@{@"mirrorMode": @NO, @"logEnabled": @NO}];
+    
+    // 监听设置变化
+    CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(),
+                                    NULL,
+                                    (CFNotificationCallback)handlePreferencesChanged,
+                                    CFSTR("com.your.tweak.prefs.changed"),
+                                    NULL,
+                                    CFNotificationSuspensionBehaviorDeliverImmediately);
+    
+    // 初始配置
+    [self configureDisplayMode];
+}
+
+- (void)configureDisplayMode {
     BOOL mirror = IsMirrorModeEnabled();
     SBExternalDisplayManager *mgr = [%c(SBExternalDisplayManager) sharedInstance];
-    // mirror==YES 时要镜像，内部 API 用 setWantsExtendedDisplay:NO；mirror==NO 时扩展，用 YES
-    [mgr setWantsExtendedDisplay:!mirror];
-
-    LogIfEnabled(@"Display mode set to %@", mirror ? @"Mirror" : @"Extend");
+    if (mgr && [mgr respondsToSelector:@selector(setWantsExtendedDisplay:)]) {
+        [mgr setWantsExtendedDisplay:!mirror];
+        LogIfEnabled(@"Display mode set to %@", mirror ? @"Mirror" : @"Extend");
+    } else {
+        LogIfEnabled(@"Error: Display configuration failed.");
+    }
 }
 
 %end
+
+// 偏好设置变化回调
+static void handlePreferencesChanged() {
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    SpringBoard *springBoard = [UIApplication sharedApplication];
+    [springBoard configureDisplayMode];
+}

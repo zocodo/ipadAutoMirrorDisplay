@@ -18,7 +18,7 @@ jobs:
         run: |
           uname -m
           csrutil status
-          brew uninstall fakeroot
+
           arch -arm64 brew install fakeroot
           brew install ldid dpkg
       - name: Clone Theos

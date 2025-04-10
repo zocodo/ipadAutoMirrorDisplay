@@ -3,46 +3,40 @@ name: Build & Publish AutoMirrorDisplay
 on:
   push:
     branches:
-      - main
+    - main
   workflow_dispatch:
+
 
 jobs:
   build:
     runs-on: macos-latest
 
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
+    - name: Checkout Code
+      uses: actions/checkout@v3
 
-      - name: Install Dependencies
-        run: |
-          uname -m
-          csrutil status
+    - name: Install Dependencies
+      run: |
+        brew install ldid dpkg
 
-          arch -arm64 brew install fakeroot
-          brew install ldid dpkg
-      - name: Clone Theos
-        run: |
-          git clone --recursive https://github.com/theos/theos.git
+    - name: Clone Theos
+      run: |
+        git clone --recursive https://github.com/theos/theos.git
+        mkdir -p theos/sdks
+        # （可选）下载并解压 iOS 16.5 SDK 到 theos/sdks
+        # curl -L https://github.com/theos/sdks/releases/download/.../iPhoneOS16.5.sdk.tar.xz \
+        #   -o theos/sdks/iPhoneOS16.5.sdk.tar.xz
+        # tar -xf theos/sdks/iPhoneOS16.5.sdk.tar.xz -C theos/sdk
 
-      - name: Debug directory
-        run: |
-          ls -la
-          ls -la theos
+    - name: Build Package with dpkg-deb
+      run: |
+        export THEOS=${{ github.workspace }}/theos
+          # 直接调用 dpkg-deb 打包，绕过 fakeroot
+        make package FINALPACKAGE=1 \
+              THEOS_PACKAGE_SCHEME=rootless \
+              INTERNAL_PACKAGE_METHOD=dpkg-deb
 
-      - name: Build Package
-        run: |
-          export THEOS=${{ github.workspace }}/theos
-          make package FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
-
-      - name: Upload Artifact to Actions
-        uses: actions/upload-artifact@v4
-        with:
-          name: AutoMirrorDisplay
-          path: packages/*.deb
-          if-no-files-found: error
-
-      - name: Upload to GitHub Release
+      - name: Upload .deb to GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           files: packages/*.deb

@@ -8,7 +8,7 @@ export THEOS_PACKAGE_SCHEME = rootless
 include $(THEOS)/makefiles/common.mk
 
 TWEAK_NAME = AutoMirrorDisplay
-AutoMirrorDisplay_FILES = Tweak.x
+AutoMirrorDisplay_FILES = Tweak.swift
 AutoMirrorDisplay_CFLAGS = -fobjc-arc
 AutoMirrorDisplay_FRAMEWORKS = UIKit Foundation
 

@@ -19,15 +19,18 @@ jobs:
         with:
           theos-dir: theos
 
+      - name: Install Dependencies
+        run: |
+          brew install ldid dpkg fakeroot
+      - name: Clone Theos
+        run: |
+          git clone --recursive https://github.com/theos/theos.git
+  
       - name: Debug directory
         run: |
           ls -la
           ls -la theos
       
-      - name: Install Dependencies
-        run: |
-          brew install ldid dpkg fakeroot
-
       - name: Build Package
         run: |
           export THEOS=${{ github.workspace }}/theos

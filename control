@@ -1,0 +1,9 @@
+Package: com.yourid.automirrordisplay
+Name: AutoMirrorDisplay
+Version: 1.0.0
+Architecture: iphoneos-arm64
+Description: Automatically mirror display when external monitor is connected.
+Maintainer: You
+Author: You
+Section: Tweaks
+Depends: firmware (>= 15.0)

@@ -12,18 +12,13 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: 安装依赖项
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y git perl curl wget ldid dpkg
-      - name: 克隆 Theos
-        run: |
-          git clone --recursive https://github.com/theos/theos.git
-          echo "THEOS=$(pwd)/theos" >> $GITHUB_ENV
-      - name: 下载 SDKs
-        run: |
-          git clone https://github.com/theos/sdks.git
-          cp -r sdks/* theos/sdks/
+      - name: 设置 Theos
+        uses: beerpiss/theos-action@v1
+        with:
+          theos-dir: theos  # 可选，指定 Theos 的安装目录，默认为 'theos'
+          theos-src: 'https://github.com/theos/theos'  # 可选，指定 Theos 的源码仓库
+          theos-sdks: 'https://github.com/theos/sdks'  # 可选，指定 Theos SDKs 的仓库
+          theos-sdks-ref: 'master'  # 可选，指定 SDKs 仓库的分支或标签
 
       # 编译并打包 .deb
       - name: Build Package

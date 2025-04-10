@@ -1,8 +1,9 @@
-name: Build AutoMirrorDisplay
+name: Build & Publish AutoMirrorDisplay
 
 on:
   push:
-    branches: [ main ]
+    tags:
+      - 'v*'  # eg: v1.0.0
   workflow_dispatch:
 
 jobs:
@@ -10,31 +11,34 @@ jobs:
     runs-on: macos-latest
 
     steps:
-      # 1. 检出代码
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      # 2. 设置 Theos 环境
       - name: Setup Theos
         uses: beerpiss/theos-action@v1
         with:
           theos-dir: theos
 
-      # 3. 安装必要的依赖项
       - name: Install Dependencies
         run: |
-          brew install ldid dpkg
+          brew install ldid dpkg fakeroot
 
-      # 4. 编译并打包 .deb
       - name: Build Package
         run: |
-          export THEOS=$(pwd)/theos
-          make package FINALPACKAGE=1
+          export THEOS=${{ github.workspace }}/theos
+          make package FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
 
-      # 5. 上传生成的 .deb 作为构建产物
-      - name: Upload .deb Artifact
+      - name: Upload Artifact to Actions
         uses: actions/upload-artifact@v4
         with:
           name: AutoMirrorDisplay
           path: packages/*.deb
           if-no-files-found: error
+
+      - name: Upload to GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: packages/*.deb
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+

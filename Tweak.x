@@ -7,31 +7,21 @@
 - (void)setWantsExtendedDisplay:(BOOL)extend;
 @end
 
-// 声明 SpringBoard 类
-@interface SpringBoard : UIApplication
-- (void)configureDisplayMode; // 声明需要的方法
-@end
-
 // 读取配置
 static BOOL IsMirrorModeEnabled() {
     return [[NSUserDefaults standardUserDefaults] boolForKey:@"mirrorMode"];
 }
+
 static BOOL IsLoggingEnabled() {
     return [[NSUserDefaults standardUserDefaults] boolForKey:@"logEnabled"];
 }
+
 static void LogIfEnabled(NSString *format, ...) {
     if (!IsLoggingEnabled()) return;
     va_list args;
     va_start(args, format);
     NSLogv([@"[AutoMirrorDisplay] " stringByAppendingString:format], args);
     va_end(args);
-}
-
-// 偏好设置变化回调
-static void handlePreferencesChanged() {
-    [[NSUserDefaults standardUserDefaults] synchronize];
-    SpringBoard *springBoard = [UIApplication sharedApplication];
-    [springBoard configureDisplayMode];
 }
 
 %hook SpringBoard
@@ -63,6 +53,17 @@ static void handlePreferencesChanged() {
     } else {
         LogIfEnabled(@"Error: Display configuration failed.");
     }
+}
+
+// 处理设置变化
+void handlePreferencesChanged(CFNotificationCenterRef center, 
+                               void *observer, 
+                               CFNotificationName name, 
+                               const void *object, 
+                               CFDictionaryRef userInfo) {
+    // 重新配置显示模式
+    [self configureDisplayMode];
+    LogIfEnabled(@"Preferences changed, reconfiguring display mode.");
 }
 
 %end

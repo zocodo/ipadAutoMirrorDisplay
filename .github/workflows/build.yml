@@ -13,10 +13,14 @@ jobs:
       - uses: actions/checkout@v3
 
       # 安装 Theos（示例使用 beerpiss/theos-action）
-      - name: Setup Theos
-        uses: beerpiss/theos-action@v1
-        with:
-          theos-dir: theos
+	  - name: 设置 Theos
+		uses: beerpiss/theos-action@v1
+		with:
+			theos-dir: theos  # 可选，指定 Theos 的安装目录，默认为 'theos'
+			theos-src: 'https://github.com/theos/theos'  # 可选，指定 Theos 的源码仓库
+			theos-sdks: 'https://github.com/theos/sdks'  # 可选，指定 Theos SDKs 的仓库
+			theos-sdks-ref: 'master'  # 可选，指定 SDKs 仓库的分支或标签
+		  
 
       # 编译并打包 .deb
       - name: Build Package

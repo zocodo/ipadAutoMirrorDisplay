@@ -1,44 +1,65 @@
-name: Build & Publish AutoMirrorDisplay
+name: Build & Release AutoMirrorDisplay
 
 on:
   push:
-    branches:
-    - main
+    # 主分支也会编译，但不会做 Release
+    branches: [ main ]
+    # 只有符合 v* 格式的 tag 才会触发 Release
+    tags: [ 'v*' ]
   workflow_dispatch:
 
 
 jobs:
   build:
     runs-on: macos-latest
+    outputs:
+      deb-path: ${{ steps.build.outputs.deb }}
 
     steps:
-    - name: Checkout Code
+    - name: Checkout code
       uses: actions/checkout@v3
 
-    - name: Install Dependencies
+    - name: Install build deps
       run: |
-        brew install ldid dpkg
+        brew install dpkg ldid
 
     - name: Clone Theos
       run: |
         git clone --recursive https://github.com/theos/theos.git
         mkdir -p theos/sdks
-        # （可选）下载并解压 iOS 16.5 SDK 到 theos/sdks
-        # curl -L https://github.com/theos/sdks/releases/download/.../iPhoneOS16.5.sdk.tar.xz \
-        #   -o theos/sdks/iPhoneOS16.5.sdk.tar.xz
-        # tar -xf theos/sdks/iPhoneOS16.5.sdk.tar.xz -C theos/sdk
+        # 可选：下载 iOS 16.5 SDK
+        # curl -L ... -o theos/sdks/iPhoneOS16.5.sdk.tar.xz
+        # tar -xf theos/sdks/iPhoneOS16.5.sdk.tar.xz -C theos/sdks
 
-    - name: Build Package with dpkg-deb
+    - name: Build .deb
+      id: build
       run: |
         export THEOS=${{ github.workspace }}/theos
-          # 直接调用 dpkg-deb 打包，绕过 fakeroot
         make package FINALPACKAGE=1 \
-              THEOS_PACKAGE_SCHEME=rootless \
-              INTERNAL_PACKAGE_METHOD=dpkg-deb
+             THEOS_PACKAGE_SCHEME=rootless \
+             INTERNAL_PACKAGE_METHOD=dpkg-deb
+        # 将路径传给后续步骤
+        echo "::set-output name=deb::packages/*.deb"
 
-    - name: Upload .deb to GitHub Release
+    - name: Upload .deb artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: AutoMirrorDisplay-deb
+        path: ${{ steps.build.outputs.deb }}
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    steps:
+    - name: Download .deb artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: AutoMirrorDisplay-deb
+
+    - name: Create GitHub Release
       uses: softprops/action-gh-release@v2
       with:
-        files: packages/*.deb
+        files: '*.deb'
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -7,6 +7,11 @@
 - (void)setWantsExtendedDisplay:(BOOL)extend;
 @end
 
+// 声明 SpringBoard 类
+@interface SpringBoard : UIApplication
+- (void)configureDisplayMode; // 声明需要的方法
+@end
+
 // 读取配置
 static BOOL IsMirrorModeEnabled() {
     return [[NSUserDefaults standardUserDefaults] boolForKey:@"mirrorMode"];

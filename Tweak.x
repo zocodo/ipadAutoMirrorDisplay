@@ -1,5 +1,6 @@
 #import <UIKit/UIKit.h>
 #import <Foundation/Foundation.h>
+#import <SpringBoard/SpringBoard.h> // 导入 SpringBoard 头文件
 
 // 私有接口声明
 @interface SBExternalDisplayManager : NSObject
@@ -56,11 +57,7 @@ static void LogIfEnabled(NSString *format, ...) {
 }
 
 // 处理设置变化
-void handlePreferencesChanged(CFNotificationCenterRef center, 
-                               void *observer, 
-                               CFNotificationName name, 
-                               const void *object, 
-                               CFDictionaryRef userInfo) {
+- (void)handlePreferencesChanged {
     // 重新配置显示模式
     [self configureDisplayMode];
     LogIfEnabled(@"Preferences changed, reconfiguring display mode.");
@@ -68,3 +65,13 @@ void handlePreferencesChanged(CFNotificationCenterRef center,
 
 %end
 
+// C 函数作为回调
+void handlePreferencesChanged(CFNotificationCenterRef center, 
+                               void *observer, 
+                               CFNotificationName name, 
+                               const void *object, 
+                               CFDictionaryRef userInfo) {
+    // 获取 SpringBoard 实例并调用方法
+    SpringBoard *sb = (SpringBoard *)observer;
+    [sb handlePreferencesChanged];
+} 

@@ -12,9 +12,13 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - uses: MOZGIII/install-ldid-action@<action-version>
+        with:
+          tag: v2.1.5-procursus2
+      - run: ldid
+
       - name: 安装依赖项
         run: |
-          ldid
           sudo apt-get update
           sudo apt-get install -y git perl curl wget ldid dpkg
       - name: 克隆 Theos

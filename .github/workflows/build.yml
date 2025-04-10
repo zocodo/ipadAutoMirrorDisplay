@@ -12,13 +12,28 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: 设置 Theos
-        uses: beerpiss/theos-action@v1
+    #   - name: 设置 Theos
+    #     uses: BandarHL/theos-action
+    #     with:
+    #       theos-dir: theos  # 可选，指定 Theos 的安装目录，默认为 'theos'
+    #       theos-src: 'https://github.com/theos/theos'  # 可选，指定 Theos 的源码仓库
+    #       theos-sdks: 'https://github.com/theos/sdks'  # 可选，指定 Theos SDKs 的仓库
+    #       theos-sdks-ref: 'master'  # 可选，指定 SDKs 仓库的分支或标签
+
+
+      - uses: waruhachi/theos-action@v2.4.6
         with:
-          theos-dir: theos  # 可选，指定 Theos 的安装目录，默认为 'theos'
-          theos-src: 'https://github.com/theos/theos'  # 可选，指定 Theos 的源码仓库
-          theos-sdks: 'https://github.com/theos/sdks'  # 可选，指定 Theos SDKs 的仓库
-          theos-sdks-ref: 'master'  # 可选，指定 SDKs 仓库的分支或标签
+          theos-src: 'theos/theos'
+          theos-branch: 'master'
+          sdks-src: 'theos/sdks'
+          sdks-branch: 'master'
+          libgcuniversal: true
+          libgcuniversal-src: 'MrGcGamer/LibGcUniversalDocumentation'
+          libgcuniversal-branch: 'master'
+          altlist: true
+          altlist-src: 'opa334/AltList'
+          altlist-branch: 'main'
+      
 
       # 编译并打包 .deb
       - name: Build Package

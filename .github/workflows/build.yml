@@ -1,13 +1,14 @@
 name: Build & Release AutoMirrorDisplay
 
+permissions:
+  contents: write
+  packages: write
+
 on:
   push:
-    # 主分支也会编译，但不会做 Release
-    branches: [ main ]
     # 只有符合 v* 格式的 tag 才会触发 Release
-    tags: [ 'v*' ]
+    tags: ["v*"]
   workflow_dispatch:
-
 
 jobs:
   build:
@@ -16,50 +17,50 @@ jobs:
       deb-path: ${{ steps.build.outputs.deb }}
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Install build deps
-      run: |
-        brew install dpkg ldid
+      - name: Install build deps
+        run: |
+          brew install dpkg ldid
 
-    - name: Clone Theos
-      run: |
-        git clone --recursive https://github.com/theos/theos.git
-        mkdir -p theos/sdks
-        # 可选：下载 iOS 16.5 SDK
-        # curl -L ... -o theos/sdks/iPhoneOS16.5.sdk.tar.xz
-        # tar -xf theos/sdks/iPhoneOS16.5.sdk.tar.xz -C theos/sdks
+      - name: Clone Theos
+        run: |
+          git clone --recursive https://github.com/theos/theos.git
+          mkdir -p theos/sdks
+          # 可选：下载 iOS 16.5 SDK
+          # curl -L ... -o theos/sdks/iPhoneOS16.5.sdk.tar.xz
+          # tar -xf theos/sdks/iPhoneOS16.5.sdk.tar.xz -C theos/sdks
 
-    - name: Build .deb
-      id: build
-      run: |
-        export THEOS=${{ github.workspace }}/theos
-        make package FINALPACKAGE=1 \
-             THEOS_PACKAGE_SCHEME=rootless \
-             INTERNAL_PACKAGE_METHOD=dpkg-deb
-        # 将路径传给后续步骤
-        echo "::set-output name=deb::packages/*.deb"
+      - name: Build .deb
+        id: build
+        run: |
+          export THEOS=${{ github.workspace }}/theos
+          make package FINALPACKAGE=1 \
+               THEOS_PACKAGE_SCHEME=rootless \
+               INTERNAL_PACKAGE_METHOD=dpkg-deb
+          # 将路径传给后续步骤
+          echo "::set-output name=deb::packages/*.deb"
 
-    - name: Upload .deb artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: AutoMirrorDisplay-deb
-        path: ${{ steps.build.outputs.deb }}
+      - name: Upload .deb artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: AutoMirrorDisplay-deb
+          path: ${{ steps.build.outputs.deb }}
 
   release:
     needs: build
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/')
     steps:
-    - name: Download .deb artifact
-      uses: actions/download-artifact@v4
-      with:
-        name: AutoMirrorDisplay-deb
+      - name: Download .deb artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: AutoMirrorDisplay-deb
 
-    - name: Create GitHub Release
-      uses: softprops/action-gh-release@v2
-      with:
-        files: '*.deb'
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: "*.deb"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

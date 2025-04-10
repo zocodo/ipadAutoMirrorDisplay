@@ -19,6 +19,11 @@ jobs:
         with:
           theos-dir: theos
 
+      - name: Debug directory
+        run: |
+          ls -la
+          ls -la theos
+      
       - name: Install Dependencies
         run: |
           brew install ldid dpkg fakeroot

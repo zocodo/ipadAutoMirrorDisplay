@@ -21,6 +21,14 @@ static void LogIfEnabled(NSString *format, ...) {
     NSLogv([@"[AutoMirrorDisplay] " stringByAppendingString:format], args);
     va_end(args);
 }
+
+// 偏好设置变化回调
+static void handlePreferencesChanged() {
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    SpringBoard *springBoard = [UIApplication sharedApplication];
+    [springBoard configureDisplayMode];
+}
+
 %hook SpringBoard
 
 - (void)applicationDidFinishLaunching:(id)application {
@@ -54,9 +62,3 @@ static void LogIfEnabled(NSString *format, ...) {
 
 %end
 
-// 偏好设置变化回调
-static void handlePreferencesChanged() {
-    [[NSUserDefaults standardUserDefaults] synchronize];
-    SpringBoard *springBoard = [UIApplication sharedApplication];
-    [springBoard configureDisplayMode];
-}

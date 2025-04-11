@@ -6,6 +6,9 @@ THEOS_USE_SWIFT = 1
 # 指定 Swift 版本
 SWIFT_VERSION = 5.5
 
+# Orion 配置
+ORION_VERSION = 1.0.2
+
 include $(THEOS)/makefiles/common.mk
 
 TWEAK_NAME = AutoMirror
@@ -17,5 +20,8 @@ AutoMirror_CFLAGS = -fobjc-arc -ISources/AutoMirrorC/include
 # Swift 相关配置
 AutoMirror_SWIFT_BRIDGING_HEADER = Sources/AutoMirror/AutoMirror-Bridging-Header.h
 AutoMirror_SWIFT_MODULE_NAME = AutoMirror
+
+# Orion 相关配置
+AutoMirror_ORION_VERSION = $(ORION_VERSION)
 
 include $(THEOS_MAKE_PATH)/tweak.mk

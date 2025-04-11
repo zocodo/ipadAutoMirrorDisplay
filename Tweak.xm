@@ -1,6 +1,7 @@
 #import <UIKit/UIKit.h>
 #import <objc/runtime.h>
-#import <ControlCenter/ControlCenter.h>
+#import <SpringBoard/SpringBoard.h>
+#import <SpringBoard/SBControlCenterController.h>
 
 // —— 自定义控制中心模块 ——
 @interface DisplayModeModule : NSObject <CCModule>

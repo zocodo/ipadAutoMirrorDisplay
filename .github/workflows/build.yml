@@ -23,7 +23,7 @@ jobs:
 
       - name: Install build deps
         run: |
-          brew install dpkg ldid xz
+          brew install dpkg ldid xz dos2unix
           sudo xcode-select -s /Applications/Xcode.app
 
       - name: Setup Theos

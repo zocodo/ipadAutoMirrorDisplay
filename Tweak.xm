@@ -4,7 +4,7 @@
 #import <SpringBoard/SBControlCenterController.h>
 
 // —— 自定义控制中心模块 ——
-@interface DisplayModeModule : NSObject <CCModule>
+@interface DisplayModeModule : NSObject
 @property (nonatomic, strong) UIButton *toggleButton;
 @end
 
@@ -61,9 +61,9 @@
 @end
 
 // —— 注入控制中心 ——
-%hook CCControlCenterModuleProvider
+%hook SBControlCenterController
 
-- (NSArray *)moduleIdentifiers {
+- (NSArray *)orderedModuleIdentifiers {
     NSMutableArray *mods = [NSMutableArray arrayWithArray:%orig];
     if (![mods containsObject:@"com.example.DisplayMode"]) {
         [mods addObject:@"com.example.DisplayMode"];
@@ -71,9 +71,12 @@
     return mods;
 }
 
-- (id)moduleInstanceForIdentifier:(NSString *)identifier {
+- (UIViewController *)moduleInstanceForIdentifier:(NSString *)identifier {
     if ([identifier isEqualToString:@"com.example.DisplayMode"]) {
-        return [[DisplayModeModule alloc] init];
+        UIViewController *vc = [[UIViewController alloc] init];
+        DisplayModeModule *module = [[DisplayModeModule alloc] init];
+        [vc.view addSubview:[module contentView]];
+        return vc;
     }
     return %orig;
 }

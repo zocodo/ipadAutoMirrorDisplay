@@ -12,4 +12,4 @@
 - (void)checkDisplayConnection;
 - (void)toggleEnabled:(UISwitch *)sender;
 
-@end
+@end 

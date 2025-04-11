@@ -1,6 +1,5 @@
 #import <UIKit/UIKit.h>
 #import "ObcAutoMirrorController.h"
-#import <SpringBoard/SpringBoard.h>
 
 // 声明控制中心相关类
 @interface CCUIModuleInstance : NSObject
@@ -20,11 +19,6 @@
 @interface ObcAutoMirrorModule : CCUIModuleInstance
 @property(nonatomic, retain) UIButton *toggleButton;
 @property(nonatomic, retain) UILabel *statusLabel;
-@end
-
-// 添加 SpringBoard 类的方法声明
-@interface SpringBoard ()
-- (void)setupControlCenterModule;
 @end
 
 @implementation ObcAutoMirrorModule

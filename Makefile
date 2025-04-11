@@ -5,13 +5,8 @@ include $(THEOS)/makefiles/common.mk
 TWEAK_NAME = iPadDisplayMode
 iPadDisplayMode_FILES = Tweak.xm
 
-# Public UIKit
+# 仅使用 UIKit，移除 ControlCenterUIKit
 iPadDisplayMode_FRAMEWORKS = UIKit
-
-# Private frameworks
-iPadDisplayMode_PRIVATE_FRAMEWORKS = ControlCenterUIKit SpringBoardServices
-
-# Tell the linker where to find private frameworks
-iPadDisplayMode_LDFLAGS += -F/System/Library/PrivateFrameworks
+iPadDisplayMode_PRIVATE_FRAMEWORKS = SpringBoardServices
 
 include $(THEOS_MAKE_PATH)/tweak.mk

@@ -2,16 +2,5 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" 
     "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
-<dict>
-    <key>CCUIModuleIdentifier</key>
-    <string>com.example.DisplayMode</string>
-    <key>CCUIModuleDisplayName</key>
-    <string>Display Mode</string>
-    <key>CCUIModuleClass</key>
-    <string>DisplayModeModule</string>
-    <key>CCUISupportedModules</key>
-    <array>
-        <string>com.example.DisplayMode</string>
-    </array>
-</dict>
+<dict/>
 </plist>

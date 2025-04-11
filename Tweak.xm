@@ -1,76 +1,86 @@
 #import <UIKit/UIKit.h>
-#import <ControlCenterUIKit/ControlCenterUIKit.h>
 
-// —— 私有 API 声明 ——
-// SpringBoard 的私有单例，用于控制外接显示器的镜像开关
+// —— SpringBoard 外接显示器管理器（私有 API） ——
 @interface SBExternalDisplayManager : NSObject
 + (instancetype)sharedInstance;
 - (void)setMirroringEnabled:(BOOL)enabled;
 @end
 
-// —— 自定义 Control Center Toggle 模块 ——
-// 继承自 CCUIToggleModule，自动获得开关样式
-@interface DisplayModeModule : CCUIToggleModule
+// —— 自定义控制中心按钮 ——
+// 一个简单的 UIViewController 用作模块
+@interface DisplayModeViewController : UIViewController
+@property (nonatomic, strong) UIButton *toggleButton;
 @end
 
-@implementation DisplayModeModule
+@implementation DisplayModeViewController
 
-- (NSString *)toggleIdentifier {
-    return @"com.example.DisplayMode";
+- (void)viewDidLoad {
+    [super viewDidLoad];
+
+    self.toggleButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    self.toggleButton.frame = CGRectMake(10, 10, 60, 60);
+    [self.toggleButton setTitle:@"镜像" forState:UIControlStateNormal];
+    self.toggleButton.backgroundColor = [UIColor colorWithWhite:1 alpha:0.1];
+    self.toggleButton.layer.cornerRadius = 12;
+
+    [self.toggleButton addTarget:self action:@selector(togglePressed)
+                forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:self.toggleButton];
+
+    [self updateState];
 }
 
-- (BOOL)isSelected {
-    return [[NSUserDefaults standardUserDefaults]
-             boolForKey:[self toggleIdentifier]];
-}
-
-- (void)setSelected:(BOOL)selected {
-    [[NSUserDefaults standardUserDefaults]
-      setBool:selected forKey:[self toggleIdentifier]];
+- (void)togglePressed {
+    BOOL on = ![[NSUserDefaults standardUserDefaults] boolForKey:@"com.example.DisplayMode"];
+    [[NSUserDefaults standardUserDefaults] setBool:on forKey:@"com.example.DisplayMode"];
     [[NSUserDefaults standardUserDefaults] synchronize];
-    [[SBExternalDisplayManager sharedInstance]
-      setMirroringEnabled:selected];
+    [[SBExternalDisplayManager sharedInstance] setMirroringEnabled:on];
+    [self updateState];
+}
+
+- (void)updateState {
+    BOOL on = [[NSUserDefaults standardUserDefaults] boolForKey:@"com.example.DisplayMode"];
+    NSString *title = on ? @"镜像" : @"扩展";
+    [self.toggleButton setTitle:title forState:UIControlStateNormal];
 }
 
 @end
 
-// —— 注入 Control Center ——
-// SpringBoard 控制中心控制器
+// —— 注入控制中心 ——
+// Hook SpringBoard 控制中心模块加载逻辑
 @interface SBControlCenterController : NSObject
-- (NSArray<NSString *> *)orderedModuleIdentifiers;
+- (NSArray *)orderedModuleIdentifiers;
+- (UIViewController *)moduleInstanceForIdentifier:(NSString *)identifier;
 @end
 
 %hook SBControlCenterController
-- (NSArray<NSString *> *)orderedModuleIdentifiers {
+
+- (NSArray *)orderedModuleIdentifiers {
     NSMutableArray *mods = [NSMutableArray arrayWithArray:%orig];
     if (![mods containsObject:@"com.example.DisplayMode"]) {
         [mods addObject:@"com.example.DisplayMode"];
     }
     return mods;
 }
+
+- (UIViewController *)moduleInstanceForIdentifier:(NSString *)identifier {
+    if ([identifier isEqualToString:@"com.example.DisplayMode"]) {
+        return [DisplayModeViewController new];
+    }
+    return %orig;
+}
+
 %end
 
-// —— 监听外接显示器 Scene 生命周期 ——
-// 使用 UISceneWillConnectNotification 与 UISceneDidDisconnectNotification
+// —— 监听外接显示器连接 ——（使用非废弃 API）
 %ctor {
     NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
     [nc addObserverForName:UISceneWillConnectNotification
-                    object:nil
-                     queue:nil
-                usingBlock:^(NSNotification *note) {
+                    object:nil queue:nil usingBlock:^(NSNotification *note) {
         UIScene *scene = note.object;
-        // 使用字符串字面量替代已弃用的常量
         if ([scene.session.role isEqualToString:@"UIWindowSceneSessionRoleExternalDisplay"]) {
-            BOOL on = [[NSUserDefaults standardUserDefaults]
-                         boolForKey:@"com.example.DisplayMode"];
-            [[SBExternalDisplayManager sharedInstance]
-              setMirroringEnabled:on];
+            BOOL on = [[NSUserDefaults standardUserDefaults] boolForKey:@"com.example.DisplayMode"];
+            [[SBExternalDisplayManager sharedInstance] setMirroringEnabled:on];
         }
-    }];
-    [nc addObserverForName:UISceneDidDisconnectNotification
-                    object:nil
-                     queue:nil
-                usingBlock:^(NSNotification *note) {
-        // 外接显示器断开，可在此执行清理逻辑
     }];
 }

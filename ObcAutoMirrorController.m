@@ -1,6 +1,7 @@
 #import "ObcAutoMirrorController.h"
 #import <UIKit/UIKit.h>
 #import <objc/runtime.h>
+#import <objc/message.h>
 
 // 声明私有 API
 @interface UIScreen ()

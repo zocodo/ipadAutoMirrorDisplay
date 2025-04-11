@@ -1,5 +1,6 @@
 #import "ObcAutoMirrorController.h"
 #import <UIKit/UIKit.h>
+#import <objc/runtime.h>
 
 // 声明私有 API
 @interface UIScreen ()
@@ -9,6 +10,11 @@
 
 @interface UIScreen (Private)
 + (UIScreen *)mirroredScreen;
+@end
+
+// 声明 UIScene 的 windows 属性
+@interface UIScene ()
+@property(nonatomic, readonly) NSArray<UIWindow *> *windows;
 @end
 
 @implementation ObcAutoMirrorController {
@@ -99,27 +105,32 @@
 }
 
 - (BOOL)isExternalDisplayConnected {
-    // 尝试使用 UIScreen.screens 方法（虽然已弃用，但在某些情况下仍可使用）
-    NSArray *screens = [UIScreen screens];
-    for (UIScreen *screen in screens) {
-        if (screen != [UIScreen mainScreen]) {
-            _externalScreen = screen;
-            [self updateLog:@"检测到外接显示器"];
-            return YES;
-        }
-    }
-    
-    // 如果上面的方法失败，尝试使用 UISceneSession
+    // 使用 UISceneSession 方法检测外接显示器
     NSSet<UISceneSession *> *sessions = [UIApplication sharedApplication].openSessions;
     for (UISceneSession *session in sessions) {
         UIScene *scene = session.scene;
         if (scene) {
-            for (UIWindow *window in scene.windows) {
+            // 使用 KVC 获取 windows 属性
+            NSArray *windows = [scene valueForKey:@"windows"];
+            for (UIWindow *window in windows) {
                 if (window.screen != [UIScreen mainScreen]) {
                     _externalScreen = window.screen;
-                    [self updateLog:@"检测到外接显示器（通过 UISceneSession）"];
+                    [self updateLog:@"检测到外接显示器"];
                     return YES;
                 }
+            }
+        }
+    }
+    
+    // 尝试使用 UIScreen 的私有 API
+    SEL screensSelector = NSSelectorFromString(@"screens");
+    if ([UIScreen respondsToSelector:screensSelector]) {
+        NSArray *screens = ((NSArray *(*)(id, SEL))objc_msgSend)([UIScreen class], screensSelector);
+        for (UIScreen *screen in screens) {
+            if (screen != [UIScreen mainScreen]) {
+                _externalScreen = screen;
+                [self updateLog:@"检测到外接显示器（通过私有 API）"];
+                return YES;
             }
         }
     }

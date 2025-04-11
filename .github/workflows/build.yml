@@ -22,9 +22,7 @@ jobs:
 
       - name: Install build deps
         run: |
-          brew install dpkg ldid swift
-          # 安装 Swift 工具链
-          xcode-select --install
+          brew install dpkg ldid
 
       - name: Clone Theos
         run: |
@@ -39,9 +37,6 @@ jobs:
       - name: Build .deb with dpkg-deb
         run: |
           export THEOS=${{ github.workspace }}/theos
-          # 设置 Swift 环境变量
-          export SWIFT_PATH=$(which swift)
-          export SWIFTC_PATH=$(which swiftc)
           make package FINALPACKAGE=1 \
                THEOS_PACKAGE_SCHEME=rootless \
                INTERNAL_PACKAGE_METHOD=dpkg-deb

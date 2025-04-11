@@ -1,0 +1,9 @@
+Package: com.example.ipaddisplaymode
+Name: iPadDisplayMode
+Version: 1.0.0
+Architecture: iphoneos-arm64
+Description: 外接显示器显示模式快速切换
+Maintainer: Your Name
+Author: Your Name
+Section: Tweaks
+Depends: mobilesubstrate (>= 0.9.5000) 

@@ -1,10 +1,9 @@
-Package: com.zocodo.automirrordisplay
-Name: AutoMirrorDisplay
-Version: 1.0.0
-Architecture: iphoneos-arm64
-Depends: firmware (>= 11.0)
-Description: Control external display mirroring and extension modes on your iOS device.
-Author: YourName
-Maintainer: YourName
-Section: tweaks
-Compatible: 16.0
+Package: com.zocodo.automirror
+Name: Auto Mirror
+Version: 0.0.1
+Architecture: iphoneos-arm
+Description: An awesome Orion tweak!
+Maintainer: zocodo
+Author: zocodo
+Section: Tweaks
+Depends: ${ORION}, firmware (>= 12.2), com.creaturecoding.libnotifications, com.creaturecoding.libpreferences

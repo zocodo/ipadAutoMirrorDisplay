@@ -1,4 +1,4 @@
-name: Build & Release AutoMirrorDisplay
+name: Build & Release AutoMirror
 
 # 提升权限以允许创建 Release
 permissions:
@@ -7,7 +7,7 @@ permissions:
 on:
   push:
     # 仅当推送 tag（如 v1.2.3）时触发 release
-    tags: ["v*"] # :contentReference[oaicite:0]{index=0}
+    tags: ["v*"]
   workflow_dispatch:
 
 jobs:
@@ -22,17 +22,26 @@ jobs:
 
       - name: Install build deps
         run: |
-          brew install dpkg ldid
+          brew install dpkg ldid swift
+          # 安装 Swift 工具链
+          xcode-select --install
 
       - name: Clone Theos
         run: |
           git clone --recursive https://github.com/theos/theos.git
           mkdir -p theos/sdks
-          # 可选：下载并解压 iOS 16.5 SDK 到 theos/sdks
+          # 安装 Theos Swift 支持
+          cd theos
+          git clone https://github.com/theos/swift.git
+          cd swift
+          ./install.sh
 
       - name: Build .deb with dpkg-deb
         run: |
           export THEOS=${{ github.workspace }}/theos
+          # 设置 Swift 环境变量
+          export SWIFT_PATH=$(which swift)
+          export SWIFTC_PATH=$(which swiftc)
           make package FINALPACKAGE=1 \
                THEOS_PACKAGE_SCHEME=rootless \
                INTERNAL_PACKAGE_METHOD=dpkg-deb
@@ -40,35 +49,33 @@ jobs:
       - name: Rename .deb
         id: rename
         run: |
-          # 直接使用 GITHUB_REF_NAME 环境变量获取 tag 名称 :contentReference[oaicite:1]{index=1}
           TAG="$GITHUB_REF_NAME"
           SRC=$(ls packages/*.deb)
-          DST="AutoMirrorDisplay-${TAG}.deb"
+          DST="AutoMirror-${TAG}.deb"
           mv "$SRC" "packages/${DST}"
-          # 将新路径输出供后续步骤使用
           echo "deb=packages/${DST}" >> $GITHUB_OUTPUT
 
       - name: Upload .deb artifact
         uses: actions/upload-artifact@v4
         with:
-          name: AutoMirrorDisplay-${{ github.ref_name }}.deb # :contentReference[oaicite:2]{index=2}
+          name: AutoMirror-${{ github.ref_name }}.deb
           path: ${{ steps.rename.outputs.deb }}
 
   release:
     needs: build
     runs-on: ubuntu-latest
-    if: startsWith(github.ref, 'refs/tags/') # 仅在 tag 推送时执行
+    if: startsWith(github.ref, 'refs/tags/')
     steps:
       - name: Download .deb artifact
         uses: actions/download-artifact@v4
         with:
-          name: AutoMirrorDisplay-${{ github.ref_name }}.deb
+          name: AutoMirror-${{ github.ref_name }}.deb
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.ref_name }}
-          release_name: AutoMirrorDisplay ${{ github.ref_name }}
-          files: AutoMirrorDisplay-${{ github.ref_name }}.deb
+          release_name: AutoMirror ${{ github.ref_name }}
+          files: AutoMirror-${{ github.ref_name }}.deb
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

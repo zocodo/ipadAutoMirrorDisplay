@@ -1,0 +1,4 @@
+module AutoMirrorC {
+    umbrella "."
+    export *
+}

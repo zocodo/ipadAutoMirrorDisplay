@@ -1,6 +1,14 @@
+import Foundation
 import UIKit
-import AutoMirrorC
-import IOKit
+import Preferences
+import notify
+
+// 使用 Objective-C 运行时来访问 IOKit 功能
+@_silgen_name("IOHIDEventSystemClientCreate")
+func IOHIDEventSystemClientCreate(_ allocator: CFAllocator?) -> Unmanaged<AnyObject>?
+
+@_silgen_name("IOHIDEventSystemClientSetMatching")
+func IOHIDEventSystemClientSetMatching(_ client: AnyObject, _ matching: CFDictionary?)
 
 class Tweak {
     private var displayNotificationPort: IONotificationPortRef?

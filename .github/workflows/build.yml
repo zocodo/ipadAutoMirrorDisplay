@@ -30,7 +30,7 @@ jobs:
           mkdir -p theos/sdks
           # 安装 Theos Swift 支持
           cd theos
-          git clone https://github.com/theos/swift.git
+          git clone https://${{ secrets.GITHUB_TOKEN }}@github.com/theos/swift.git
           cd swift
           ./install.sh
 

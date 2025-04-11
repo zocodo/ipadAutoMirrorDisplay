@@ -1,28 +1,26 @@
 #import <UIKit/UIKit.h>
 #import <objc/runtime.h>
+#import <ControlCenter/ControlCenter.h>
 
-// —— 自定义控制中心按钮 ——
-// 一个简单的 UIViewController 用作模块
-@interface DisplayModeViewController : UIViewController
+// —— 自定义控制中心模块 ——
+@interface DisplayModeModule : NSObject <CCModule>
 @property (nonatomic, strong) UIButton *toggleButton;
 @end
 
-@implementation DisplayModeViewController
+@implementation DisplayModeModule
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
-
-    self.toggleButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    self.toggleButton.frame = CGRectMake(10, 10, 60, 60);
-    [self.toggleButton setTitle:@"镜像" forState:UIControlStateNormal];
-    self.toggleButton.backgroundColor = [UIColor colorWithWhite:1 alpha:0.1];
-    self.toggleButton.layer.cornerRadius = 12;
-
-    [self.toggleButton addTarget:self action:@selector(togglePressed)
+- (UIView *)contentView {
+    if (!_toggleButton) {
+        _toggleButton = [UIButton buttonWithType:UIButtonTypeSystem];
+        _toggleButton.frame = CGRectMake(10, 10, 60, 60);
+        [_toggleButton setTitle:@"镜像" forState:UIControlStateNormal];
+        _toggleButton.backgroundColor = [UIColor colorWithWhite:1 alpha:0.1];
+        _toggleButton.layer.cornerRadius = 12;
+        [_toggleButton addTarget:self action:@selector(togglePressed)
                 forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:self.toggleButton];
-
-    [self updateState];
+        [self updateState];
+    }
+    return _toggleButton;
 }
 
 - (void)togglePressed {
@@ -56,21 +54,15 @@
 - (void)updateState {
     BOOL on = [[NSUserDefaults standardUserDefaults] boolForKey:@"com.example.DisplayMode"];
     NSString *title = on ? @"镜像" : @"扩展";
-    [self.toggleButton setTitle:title forState:UIControlStateNormal];
+    [_toggleButton setTitle:title forState:UIControlStateNormal];
 }
 
 @end
 
 // —— 注入控制中心 ——
-// Hook SpringBoard 控制中心模块加载逻辑
-@interface SBControlCenterController : NSObject
-- (NSArray *)orderedModuleIdentifiers;
-- (UIViewController *)moduleInstanceForIdentifier:(NSString *)identifier;
-@end
+%hook CCControlCenterModuleProvider
 
-%hook SBControlCenterController
-
-- (NSArray *)orderedModuleIdentifiers {
+- (NSArray *)moduleIdentifiers {
     NSMutableArray *mods = [NSMutableArray arrayWithArray:%orig];
     if (![mods containsObject:@"com.example.DisplayMode"]) {
         [mods addObject:@"com.example.DisplayMode"];
@@ -78,9 +70,9 @@
     return mods;
 }
 
-- (UIViewController *)moduleInstanceForIdentifier:(NSString *)identifier {
+- (id)moduleInstanceForIdentifier:(NSString *)identifier {
     if ([identifier isEqualToString:@"com.example.DisplayMode"]) {
-        return [DisplayModeViewController new];
+        return [[DisplayModeModule alloc] init];
     }
     return %orig;
 }

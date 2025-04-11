@@ -28,6 +28,7 @@ jobs:
         run: |
           git clone --recursive https://github.com/theos/theos.git
           mkdir -p theos/sdks
+          ls theos/sdks
 
       - name: Build .deb with dpkg-deb
         run: |

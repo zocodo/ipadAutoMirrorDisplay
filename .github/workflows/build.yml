@@ -36,6 +36,11 @@ jobs:
           rm iPhoneOS16.5.sdk.tar.xz
           ls -la theos/sdks
 
+      - name: Convert line endings
+        run: |
+          dos2unix control
+          dos2unix iPadDisplayMode.plist
+
       - name: Build .deb with dpkg-deb
         env:
           THEOS: ${{ github.workspace }}/theos

@@ -11,6 +11,6 @@ iPadDisplayMode_PRIVATE_FRAMEWORKS = SpringBoardServices SpringBoardUI ControlCe
 
 # 添加必要的链接标志
 iPadDisplayMode_CFLAGS = -fobjc-arc
-iPadDisplayMode_LDFLAGS = -F$(THEOS)/sdks/iPhoneOS16.5.sdk/System/Library/PrivateFrameworks
+iPadDisplayMode_LDFLAGS = -F$(THEOS)/sdks/iPhoneOS16.5.sdk/System/Library/PrivateFrameworks -framework SpringBoardServices -framework SpringBoardUI -framework ControlCenterUIKit
 
 include $(THEOS_MAKE_PATH)/tweak.mk

@@ -47,10 +47,12 @@ jobs:
           THEOS_PLATFORM_SDK_VERSION: 16.5
           THEOS_PLATFORM_SDK_NAME: iPhoneOS
           THEOS_PLATFORM_SDK_PATH: ${{ github.workspace }}/theos/sdks/iPhoneOS16.5.sdk
+          THEOS_VERBOSE: 1
         run: |
           make package FINALPACKAGE=1 \
                THEOS_PACKAGE_SCHEME=rootless \
-               INTERNAL_PACKAGE_METHOD=dpkg-deb
+               INTERNAL_PACKAGE_METHOD=dpkg-deb \
+               THEOS_VERBOSE=1
 
       - name: Rename .deb
         id: rename

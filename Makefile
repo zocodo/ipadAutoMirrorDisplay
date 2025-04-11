@@ -1,3 +1,5 @@
+export TARGET = iphone:clang:latest:16.5
+
 include $(THEOS)/makefiles/common.mk
 
 TWEAK_NAME = iPadDisplayMode

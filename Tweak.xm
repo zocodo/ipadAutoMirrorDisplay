@@ -1,108 +1,79 @@
 #import <UIKit/UIKit.h>
-#import "ObcAutoMirrorController.h"
+#import <ControlCenterUIKit/ControlCenterUIKit.h>
 
-// 声明控制中心相关类
-@interface CCUIModuleInstance : NSObject
-@property(nonatomic, retain) UIView *view;
-@end
-
-@interface CCUIModuleCollectionViewController : UIViewController
-- (void)addModule:(CCUIModuleInstance *)module;
-@end
-
-@interface CCUIModuleControlCenterViewController : UIViewController
-@property(nonatomic, retain) CCUIModuleCollectionViewController *moduleCollectionViewController;
+// —— 私有 API 声明 ——
+// SpringBoard 的私有单例，用于控制外接显示器的镜像开关
+@interface SBExternalDisplayManager : NSObject
 + (instancetype)sharedInstance;
+- (void)setMirroringEnabled:(BOOL)enabled;
 @end
 
-// 创建自定义控制中心模块
-@interface ObcAutoMirrorModule : CCUIModuleInstance
-@property(nonatomic, retain) UIButton *toggleButton;
-@property(nonatomic, retain) UILabel *statusLabel;
+// —— 自定义 Control Center Toggle 模块 ——
+// 继承自 CCUIToggleModule，自动获得开关样式
+@interface DisplayModeModule : CCUIToggleModule
 @end
 
-@implementation ObcAutoMirrorModule
+@implementation DisplayModeModule
 
-- (instancetype)init {
-    self = [super init];
-    if (self) {
-        UIView *moduleView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
-        moduleView.backgroundColor = [UIColor clearColor];
-        
-        self.toggleButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        self.toggleButton.frame = CGRectMake(10, 10, 80, 80);
-        [self.toggleButton setTitle:@"镜像" forState:UIControlStateNormal];
-        [self.toggleButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        self.toggleButton.backgroundColor = [UIColor systemBlueColor];
-        self.toggleButton.layer.cornerRadius = 40;
-        [self.toggleButton addTarget:self action:@selector(toggleButtonTapped) forControlEvents:UIControlEventTouchUpInside];
-        
-        self.statusLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 95, 80, 20)];
-        self.statusLabel.textAlignment = NSTextAlignmentCenter;
-        self.statusLabel.textColor = [UIColor whiteColor];
-        self.statusLabel.font = [UIFont systemFontOfSize:12];
-        
-        [moduleView addSubview:self.toggleButton];
-        [moduleView addSubview:self.statusLabel];
-        
-        self.view = moduleView;
-        
-        [self updateStatus];
+// 必须实现，返回和 Info.plist 中一致的 identifier
+- (NSString *)toggleIdentifier {
+    return @"com.example.DisplayMode";
+}
+
+// 读取开关状态：从 NSUserDefaults 拿
+- (BOOL)isSelected {
+    return [[NSUserDefaults standardUserDefaults]
+             boolForKey:[self toggleIdentifier]];
+}
+
+// 用户切换时调用
+- (void)setSelected:(BOOL)selected {
+    // 存储状态
+    [[NSUserDefaults standardUserDefaults]
+      setBool:selected forKey:[self toggleIdentifier]];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    // 调用私有 API 切换镜像/扩展
+    [[SBExternalDisplayManager sharedInstance]
+      setMirroringEnabled:selected];
+}
+
+@end
+
+// —— 把模块插入到控制中心 ——
+// SpringBoard 的控制中心控制器
+@interface SBControlCenterController : NSObject
+- (NSArray<NSString *> *)orderedModuleIdentifiers;
+@end
+
+%hook SBControlCenterController
+- (NSArray<NSString *> *)orderedModuleIdentifiers {
+    NSMutableArray *mods = [NSMutableArray arrayWithArray:%orig];
+    if (![mods containsObject:@"com.example.DisplayMode"]) {
+        [mods addObject:@"com.example.DisplayMode"];
     }
-    return self;
+    return mods;
 }
-
-- (void)toggleButtonTapped {
-    BOOL currentState = [[NSUserDefaults standardUserDefaults] boolForKey:@"ObcAutoMirrorEnabled"];
-    [[NSUserDefaults standardUserDefaults] setBool:!currentState forKey:@"ObcAutoMirrorEnabled"];
-    [[ObcAutoMirrorController sharedInstance] toggleEnabled:nil];
-    [self updateStatus];
-}
-
-- (void)updateStatus {
-    BOOL isEnabled = [[NSUserDefaults standardUserDefaults] boolForKey:@"ObcAutoMirrorEnabled"];
-    self.toggleButton.backgroundColor = isEnabled ? [UIColor systemGreenColor] : [UIColor systemBlueColor];
-    self.statusLabel.text = isEnabled ? @"已启用" : @"已禁用";
-}
-
-@end
-
-%hook SpringBoard
-
--(void)applicationDidFinishLaunching:(id)application {
-    %orig;
-    
-    // 延迟执行以确保控制中心已初始化
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [self setupControlCenterModule];
-    });
-}
-
-- (void)setupControlCenterModule {
-    CCUIModuleControlCenterViewController *controlCenter = [%c(CCUIModuleControlCenterViewController) sharedInstance];
-    if (controlCenter && controlCenter.moduleCollectionViewController) {
-        ObcAutoMirrorModule *module = [[ObcAutoMirrorModule alloc] init];
-        [controlCenter.moduleCollectionViewController addModule:module];
-    }
-}
-
 %end
 
-// 监听显示器连接状态变化
-%hook UIScreen
-
-- (void)didConnect {
-    %orig;
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"ObcAutoMirrorEnabled"]) {
-        [[ObcAutoMirrorController sharedInstance] checkDisplayConnection];
-    }
+// —— 监听外接显示器插拔 ——
+// 在进程启动时注册通知
+%ctor {
+    NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+    // 外接显示器接入
+    [nc addObserverForName:UIScreenDidConnectNotification
+                    object:nil
+                     queue:nil
+                usingBlock:^(NSNotification *note) {
+        BOOL on = [[NSUserDefaults standardUserDefaults]
+                     boolForKey:@"com.example.DisplayMode"];
+        [[SBExternalDisplayManager sharedInstance]
+          setMirroringEnabled:on];
+    }];
+    // 外接显示器拔出
+    [nc addObserverForName:UIScreenDidDisconnectNotification
+                    object:nil
+                     queue:nil
+                usingBlock:^(NSNotification *note) {
+        // 可以在此做清理，通常无需额外操作
+    }];
 }
-
-- (void)didDisconnect {
-    %orig;
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"ObcAutoMirrorEnabled"]) {
-        [[ObcAutoMirrorController sharedInstance] updateLog:@"外接显示器已断开连接"];
-    }
-}
-
-%end 

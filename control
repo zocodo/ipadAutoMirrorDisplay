@@ -1,9 +1,0 @@
-Package: com.zocodo.obcautomirror
-Name: ObcAutoMirror
-Version: 0.0.1
-Architecture: iphoneos-arm
-Description: 自动管理 iPad 外接显示器显示模式的插件
-Maintainer: Your Name
-Author: Your Name
-Section: Tweaks
-Depends: mobilesubstrate (>= 0.9.5000)

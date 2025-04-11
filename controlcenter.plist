@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" 
+    "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <!-- 唯一标识符 -->
+    <key>CCUIModuleIdentifier</key>
+    <string>com.example.DisplayMode</string>
+    <!-- 显示名称 -->
+    <key>CCUIModuleDisplayName</key>
+    <string>Display Mode</string>
+    <!-- 模块对应的类名 -->
+    <key>CCUIModuleClass</key>
+    <string>DisplayModeModule</string>
+    <!-- 支持此模块的页面 -->
+    <key>CCUISupportedModules</key>
+    <array>
+        <string>com.example.DisplayMode</string>
+    </array>
+</dict>
+</plist>

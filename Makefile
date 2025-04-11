@@ -21,6 +21,9 @@ AutoMirror_CFLAGS = -fobjc-arc -ISources/AutoMirrorC/include
 AutoMirror_SWIFT_BRIDGING_HEADER = Sources/AutoMirror/AutoMirror-Bridging-Header.h
 AutoMirror_SWIFT_MODULE_NAME = AutoMirror
 
+# 添加框架依赖
+AutoMirror_FRAMEWORKS = IOKit
+
 # Orion 相关配置
 AutoMirror_ORION_VERSION = $(ORION_VERSION)
 

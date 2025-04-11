@@ -3,6 +3,8 @@ INSTALL_TARGET_PROCESSES = SpringBoard
 
 # 启用 Swift 支持
 THEOS_USE_SWIFT = 1
+# 指定 Swift 版本
+SWIFT_VERSION = 5.5
 
 include $(THEOS)/makefiles/common.mk
 

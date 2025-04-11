@@ -24,7 +24,7 @@ jobs:
       - name: Install build deps
         run: |
           brew install dpkg ldid
-          xcode-select -s /Applications/Xcode.app
+          sudo xcode-select -s /Applications/Xcode.app
 
       - name: Setup Theos
         run: |

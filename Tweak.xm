@@ -22,6 +22,11 @@
 @property(nonatomic, retain) UILabel *statusLabel;
 @end
 
+// 添加 SpringBoard 类的方法声明
+@interface SpringBoard : UIApplication
+- (void)setupControlCenterModule;
+@end
+
 @implementation ObcAutoMirrorModule
 
 - (instancetype)init {

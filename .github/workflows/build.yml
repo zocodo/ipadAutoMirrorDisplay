@@ -39,6 +39,14 @@ jobs:
       - name: Build .deb with dpkg-deb
         env:
           THEOS: ${{ github.workspace }}/theos
+          SDKVERSION: 16.5
+          THEOS_PACKAGE_SCHEME: rootless
+          THEOS_DEVICE_IP: 127.0.0.1
+          THEOS_DEVICE_PORT: 2222
+          THEOS_PLATFORM_SDK_ROOT: ${{ github.workspace }}/theos/sdks/iPhoneOS16.5.sdk
+          THEOS_PLATFORM_SDK_VERSION: 16.5
+          THEOS_PLATFORM_SDK_NAME: iPhoneOS
+          THEOS_PLATFORM_SDK_PATH: ${{ github.workspace }}/theos/sdks/iPhoneOS16.5.sdk
         run: |
           make package FINALPACKAGE=1 \
                THEOS_PACKAGE_SCHEME=rootless \

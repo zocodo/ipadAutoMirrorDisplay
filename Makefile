@@ -7,10 +7,10 @@ iPadDisplayMode_FILES = Tweak.xm
 
 # 添加必要的框架
 iPadDisplayMode_FRAMEWORKS = UIKit
-iPadDisplayMode_PRIVATE_FRAMEWORKS = SpringBoardServices SpringBoardUI ControlCenterUIKit
+iPadDisplayMode_PRIVATE_FRAMEWORKS = SpringBoard SpringBoardServices SpringBoardUI ControlCenterUIKit
 
 # 添加必要的链接标志
 iPadDisplayMode_CFLAGS = -fobjc-arc
-iPadDisplayMode_LDFLAGS = -F$(THEOS)/sdks/iPhoneOS16.5.sdk/System/Library/PrivateFrameworks -framework SpringBoardServices
+iPadDisplayMode_LDFLAGS = -F$(THEOS)/sdks/iPhoneOS16.5.sdk/System/Library/PrivateFrameworks -F$(THEOS)/sdks/iPhoneOS16.5.sdk/System/Library/Frameworks -framework SpringBoard -framework SpringBoardServices
 
 include $(THEOS_MAKE_PATH)/tweak.mk

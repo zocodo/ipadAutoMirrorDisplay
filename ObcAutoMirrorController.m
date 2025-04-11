@@ -99,10 +99,10 @@
 }
 
 - (BOOL)isExternalDisplayConnected {
-    NSArray *screens = [UIScreen screens];
-    for (UIScreen *screen in screens) {
-        if (screen != [UIScreen mainScreen]) {
-            _externalScreen = screen;
+    NSArray *sessions = [UIApplication sharedApplication].openSessions;
+    for (UISceneSession *session in sessions) {
+        if (session.screen != [UIScreen mainScreen]) {
+            _externalScreen = session.screen;
             [self updateLog:@"检测到外接显示器"];
             return YES;
         }

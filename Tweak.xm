@@ -59,7 +59,8 @@
                      queue:nil
                 usingBlock:^(NSNotification *note) {
         UIScene *scene = note.object;
-        if ([scene.session.role isEqualToString:UIWindowSceneSessionRoleExternalDisplay]) {
+        // 使用字符串字面量替代已弃用的常量
+        if ([scene.session.role isEqualToString:@"UIWindowSceneSessionRoleExternalDisplay"]) {
             BOOL on = [[NSUserDefaults standardUserDefaults]
                          boolForKey:@"com.example.DisplayMode"];
             [[SBExternalDisplayManager sharedInstance]

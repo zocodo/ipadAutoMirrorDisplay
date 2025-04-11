@@ -1,4 +1,5 @@
 #import <UIKit/UIKit.h>
+#import <objc/runtime.h>
 
 // —— 自定义控制中心按钮 ——
 // 一个简单的 UIViewController 用作模块
@@ -76,18 +77,21 @@
     [[NSUserDefaults standardUserDefaults] setBool:on forKey:@"com.example.DisplayMode"];
     [[NSUserDefaults standardUserDefaults] synchronize];
     
-    // 使用 UIScreen API 控制显示模式
-    for (UIScreen *screen in [UIScreen screens]) {
-        if (screen != [UIScreen mainScreen]) {
-            // 获取当前屏幕模式
-            UIScreenMode *currentMode = screen.currentMode;
-            NSArray *availableModes = screen.availableModes;
-            
-            // 找到镜像模式（通常是第一个模式）和扩展模式（通常是最后一个模式）
-            if (availableModes.count > 0) {
-                UIScreenMode *targetMode = on ? availableModes.firstObject : availableModes.lastObject;
-                if (targetMode != currentMode) {
-                    screen.currentMode = targetMode;
+    // 使用新的 API 控制显示模式
+    for (UISceneSession *session in [UIApplication sharedApplication].openSessions) {
+        if ([session.role isEqualToString:@"UIWindowSceneSessionRoleExternalDisplay"]) {
+            UIWindowScene *scene = (UIWindowScene *)session.scene;
+            if (scene) {
+                // 获取当前屏幕模式
+                UIScreenMode *currentMode = scene.screen.currentMode;
+                NSArray *availableModes = scene.screen.availableModes;
+                
+                // 找到镜像模式（通常是第一个模式）和扩展模式（通常是最后一个模式）
+                if (availableModes.count > 0) {
+                    UIScreenMode *targetMode = on ? availableModes.firstObject : availableModes.lastObject;
+                    if (targetMode != currentMode) {
+                        scene.screen.currentMode = targetMode;
+                    }
                 }
             }
         }
@@ -133,17 +137,18 @@
 // —— 监听外接显示器连接 ——
 %ctor {
     NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
-    [nc addObserverForName:UIScreenDidConnectNotification
+    [nc addObserverForName:UISceneWillConnectNotification
                     object:nil queue:nil usingBlock:^(NSNotification *note) {
-        UIScreen *screen = note.object;
-        if (screen != [UIScreen mainScreen]) {
+        UIScene *scene = note.object;
+        if ([scene.session.role isEqualToString:@"UIWindowSceneSessionRoleExternalDisplay"]) {
             BOOL on = [[NSUserDefaults standardUserDefaults] boolForKey:@"com.example.DisplayMode"];
             
             // 设置初始显示模式
-            NSArray *availableModes = screen.availableModes;
+            UIWindowScene *windowScene = (UIWindowScene *)scene;
+            NSArray *availableModes = windowScene.screen.availableModes;
             if (availableModes.count > 0) {
                 UIScreenMode *targetMode = on ? availableModes.firstObject : availableModes.lastObject;
-                screen.currentMode = targetMode;
+                windowScene.screen.currentMode = targetMode;
             }
         }
     }];

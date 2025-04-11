@@ -7,53 +7,6 @@
 @property (nonatomic, strong) UIButton *toggleButton;
 @end
 
-%ctor {
-    // 添加调试信息
-    NSLog(@"[DisplayMode] 开始检查类是否存在");
-    
-    Class sbExternalDisplayManagerClass = NSClassFromString(@"SBExternalDisplayManager");
-    if (sbExternalDisplayManagerClass) {
-        NSLog(@"[DisplayMode] SBExternalDisplayManager 类存在");
-        
-        // 检查方法是否存在
-        if ([sbExternalDisplayManagerClass respondsToSelector:@selector(sharedInstance)]) {
-            NSLog(@"[DisplayMode] sharedInstance 方法存在");
-            
-            id instance = [sbExternalDisplayManagerClass sharedInstance];
-            if ([instance respondsToSelector:@selector(setMirroringEnabled:)]) {
-                NSLog(@"[DisplayMode] setMirroringEnabled: 方法存在");
-            } else {
-                NSLog(@"[DisplayMode] setMirroringEnabled: 方法不存在");
-            }
-        } else {
-            NSLog(@"[DisplayMode] sharedInstance 方法不存在");
-        }
-    } else {
-        NSLog(@"[DisplayMode] SBExternalDisplayManager 类不存在");
-        
-        // 列出所有包含 "ExternalDisplay" 的类名
-        NSMutableArray *matchingClasses = [NSMutableArray array];
-        int numClasses = objc_getClassList(NULL, 0);
-        if (numClasses > 0) {
-            Class *classes = (Class *)malloc(sizeof(Class) * numClasses);
-            numClasses = objc_getClassList(classes, numClasses);
-            for (int i = 0; i < numClasses; i++) {
-                NSString *className = NSStringFromClass(classes[i]);
-                if ([className containsString:@"ExternalDisplay"]) {
-                    [matchingClasses addObject:className];
-                }
-            }
-            free(classes);
-        }
-        
-        if (matchingClasses.count > 0) {
-            NSLog(@"[DisplayMode] 找到的相关类: %@", matchingClasses);
-        } else {
-            NSLog(@"[DisplayMode] 没有找到任何相关的类");
-        }
-    }
-}
-
 @implementation DisplayModeViewController
 
 - (void)viewDidLoad {

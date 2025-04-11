@@ -24,16 +24,20 @@ jobs:
       - name: Install build deps
         run: |
           brew install dpkg ldid
+          xcode-select -s /Applications/Xcode.app
 
-      - name: Clone Theos
+      - name: Setup Theos
         run: |
           git clone --recursive https://github.com/theos/theos.git
           mkdir -p theos/sdks
-          ls theos/sdks
+          # 从 Xcode 复制 iOS SDK
+          sudo cp -R /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS16.5.sdk theos/sdks/
+          ls -la theos/sdks
 
       - name: Build .deb with dpkg-deb
+        env:
+          THEOS: ${{ github.workspace }}/theos
         run: |
-          export THEOS=${{ github.workspace }}/theos
           make package FINALPACKAGE=1 \
                THEOS_PACKAGE_SCHEME=rootless \
                INTERNAL_PACKAGE_METHOD=dpkg-deb
@@ -67,7 +71,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.ref_name }}
-          release_name: AutoMirror ${{ github.ref_name }}
+          name: AutoMirror ${{ github.ref_name }}
           files: AutoMirror-${{ github.ref_name }}.deb
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

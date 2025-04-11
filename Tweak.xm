@@ -1,5 +1,6 @@
 #import <UIKit/UIKit.h>
 #import "ObcAutoMirrorController.h"
+#import <SpringBoard/SpringBoard.h>
 
 // 声明控制中心相关类
 @interface CCUIModuleInstance : NSObject
@@ -12,6 +13,7 @@
 
 @interface CCUIModuleControlCenterViewController : UIViewController
 @property(nonatomic, retain) CCUIModuleCollectionViewController *moduleCollectionViewController;
++ (instancetype)sharedInstance;
 @end
 
 // 创建自定义控制中心模块

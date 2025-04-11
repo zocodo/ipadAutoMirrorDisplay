@@ -99,15 +99,31 @@
 }
 
 - (BOOL)isExternalDisplayConnected {
-    NSSet<UISceneSession *> *sessions = [UIApplication sharedApplication].openSessions;
-    for (UISceneSession *session in sessions) {
-        UIScene *scene = session.scene;
-        if (scene && scene.screen != [UIScreen mainScreen]) {
-            _externalScreen = scene.screen;
+    // 尝试使用 UIScreen.screens 方法（虽然已弃用，但在某些情况下仍可使用）
+    NSArray *screens = [UIScreen screens];
+    for (UIScreen *screen in screens) {
+        if (screen != [UIScreen mainScreen]) {
+            _externalScreen = screen;
             [self updateLog:@"检测到外接显示器"];
             return YES;
         }
     }
+    
+    // 如果上面的方法失败，尝试使用 UISceneSession
+    NSSet<UISceneSession *> *sessions = [UIApplication sharedApplication].openSessions;
+    for (UISceneSession *session in sessions) {
+        UIScene *scene = session.scene;
+        if (scene) {
+            for (UIWindow *window in scene.windows) {
+                if (window.screen != [UIScreen mainScreen]) {
+                    _externalScreen = window.screen;
+                    [self updateLog:@"检测到外接显示器（通过 UISceneSession）"];
+                    return YES;
+                }
+            }
+        }
+    }
+    
     _externalScreen = nil;
     [self updateLog:@"未检测到外接显示器"];
     return NO;
@@ -120,10 +136,18 @@
         // 获取主屏幕
         UIScreen *mainScreen = [UIScreen mainScreen];
         
-        // 设置镜像模式
-        [mainScreen setMirroredScreen:_externalScreen];
-        
-        [self updateLog:@"已设置为镜像模式"];
+        // 尝试使用 setMirroredScreen: 方法
+        if ([mainScreen respondsToSelector:@selector(setMirroredScreen:)]) {
+            [mainScreen setMirroredScreen:_externalScreen];
+            [self updateLog:@"已设置为镜像模式（通过 setMirroredScreen:）"];
+        } else {
+            // 如果 setMirroredScreen: 方法不可用，尝试其他方法
+            // 这里需要根据实际情况实现
+            [self updateLog:@"setMirroredScreen: 方法不可用，尝试其他方法"];
+            
+            // 尝试使用 UIScreenMode 设置显示模式
+            // 这里需要根据实际情况实现
+        }
     } @catch (NSException *exception) {
         [self updateLog:[NSString stringWithFormat:@"设置镜像模式失败: %@", exception.reason]];
     }

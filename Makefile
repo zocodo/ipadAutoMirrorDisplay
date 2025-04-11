@@ -1,15 +1,13 @@
-ARCHS = arm64e
-TARGET = iphone:clang:latest:16.5
-
+TARGET := iphone:clang:16.5:16.5
 INSTALL_TARGET_PROCESSES = SpringBoard
-
-export THEOS_PACKAGE_SCHEME = rootless
 
 include $(THEOS)/makefiles/common.mk
 
-TWEAK_NAME = AutoMirrorDisplay
-AutoMirrorDisplay_FILES = Tweak.x
-AutoMirrorDisplay_CFLAGS = -fobjc-arc
-AutoMirrorDisplay_FRAMEWORKS = UIKit Foundation
+TWEAK_NAME = ObcAutoMirror
 
-include $(THEOS_MAKE_PATH)/tweak.mk
+ObcAutoMirror_FILES = Tweak.xm ObcAutoMirrorController.m
+ObcAutoMirror_CFLAGS = -fobjc-arc
+ObcAutoMirror_FRAMEWORKS = UIKit CoreGraphics
+ObcAutoMirror_PRIVATE_FRAMEWORKS = DisplayServices
+
+include $(THEOS_MAKE_PATH)/tweak.mk 

@@ -1,10 +1,9 @@
-Package: com.zocodo.automirrordisplay
-Name: AutoMirrorDisplay
-Version: 1.0.0
-Architecture: iphoneos-arm64
-Depends: firmware (>= 11.0)
-Description: Control external display mirroring and extension modes on your iOS device.
-Author: YourName
-Maintainer: YourName
-Section: tweaks
-Compatible: 16.0
+Package: com.zocodo.obcautomirror
+Name: ObcAutoMirror
+Version: 0.0.1
+Architecture: iphoneos-arm
+Description: 自动管理 iPad 外接显示器显示模式的插件
+Maintainer: zocodo
+Author: zocodo
+Section: Tweaks
+Depends: mobilesubstrate (>= 0.9.5000)

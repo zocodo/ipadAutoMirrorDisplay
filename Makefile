@@ -1,16 +1,12 @@
-export TARGET = iphone:clang:latest:16.5
+TARGET := iphone:clang:latest:7.0
+INSTALL_TARGET_PROCESSES = SpringBoard
+
 
 include $(THEOS)/makefiles/common.mk
 
-TWEAK_NAME = iPadDisplayMode
-iPadDisplayMode_FILES = Tweak.xm
+TWEAK_NAME = auto-display-mirror-mode
 
-# 添加必要的框架
-iPadDisplayMode_FRAMEWORKS = UIKit
-iPadDisplayMode_PRIVATE_FRAMEWORKS = SpringBoard SpringBoardServices SpringBoardUI ControlCenterUIKit
-
-# 添加必要的链接标志
-iPadDisplayMode_CFLAGS = -fobjc-arc
-iPadDisplayMode_LDFLAGS = -F$(THEOS)/sdks/iPhoneOS16.5.sdk/System/Library/PrivateFrameworks -F$(THEOS)/sdks/iPhoneOS16.5.sdk/System/Library/Frameworks -framework SpringBoard -framework SpringBoardServices
+auto-display-mirror-mode_FILES = Tweak.x
+auto-display-mirror-mode_CFLAGS = -fobjc-arc
 
 include $(THEOS_MAKE_PATH)/tweak.mk

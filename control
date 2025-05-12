@@ -1,9 +1,9 @@
-Package: com.example.ipaddisplaymode
-Name: iPadDisplayMode
-Version: 1.0.0
-Architecture: iphoneos-arm64
-Description: 外接显示器显示模式快速切换
-Maintainer: Your Name
-Author: Your Name
+Package: com.yourcompany.auto-display-mirror-mode
+Name: auto-display-mirror-mode
+Version: 0.0.1
+Architecture: iphoneos-arm
+Description: An awesome MobileSubstrate tweak!
+Maintainer: zocodo
+Author: zocodo
 Section: Tweaks
-Depends: mobilesubstrate (>= 0.9.5000) 
+Depends: mobilesubstrate (>= 0.9.5000)

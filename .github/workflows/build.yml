@@ -31,25 +31,19 @@ jobs:
           git clone --recursive https://github.com/theos/theos.git
           mkdir -p theos/sdks
           # 只下载 iOS 16.5 SDK
-          curl -LO https://github.com/theos/sdks/archive/master.zip
-          TTT=$(mktemp -d)
-          unzip master.zip -d $TTT
-          mv $TTT/sdks-master/*.sdk theos/sdks/
-          rm -r master.zip $TTT
-          unset $TTT
+          curl -LO https://github.com/theos/sdks/raw/master/iPhoneOS16.5.sdk
+          mv iPhoneOS16.5.sdk theos/sdks/
 
       - name: Convert line endings
         run: |
           dos2unix control
-          dos2unix iPadDisplayMode.plist
+          dos2unix auto-display-mirror-mode.plist
 
       - name: Build .deb with dpkg-deb
         env:
           THEOS: ${{ github.workspace }}/theos
           SDKVERSION: 16.5
           THEOS_PACKAGE_SCHEME: rootless
-          THEOS_DEVICE_IP: 127.0.0.1
-          THEOS_DEVICE_PORT: 2222
           THEOS_PLATFORM_SDK_ROOT: ${{ github.workspace }}/theos/sdks/iPhoneOS16.5.sdk
           THEOS_PLATFORM_SDK_VERSION: 16.5
           THEOS_PLATFORM_SDK_NAME: iPhoneOS

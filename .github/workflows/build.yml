@@ -34,9 +34,6 @@ jobs:
           curl -LO https://github.com/theos/sdks/raw/master/iPhoneOS16.5.sdk
           mv iPhoneOS16.5.sdk theos/sdks/
 
-          # 创建符号链接
-          ln -sf /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/UIKit.framework/Headers/* theos/sdks/iPhoneOS16.5.sdk/System/Library/Frameworks/UIKit.framework/Headers/
-
       - name: Convert line endings
         run: |
           dos2unix control

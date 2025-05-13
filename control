@@ -1,9 +1,9 @@
 Package: com.zocodo.ipad-auto-mirror-display
 Name: iPad Auto Mirror Display
 Version: 0.0.1
-Architecture: iphoneos-arm
+Architecture: iphoneos-arm64
 Description: Automatically switch to mirror mode when external display is connected
 Maintainer: zocodo
 Author: zocodo
 Section: Tweaks
-Depends: mobilesubstrate (>= 0.9.5000)
+Depends: firmware (>= 14.0), preferenceloader

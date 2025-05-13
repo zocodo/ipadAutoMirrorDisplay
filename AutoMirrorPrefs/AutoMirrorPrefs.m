@@ -26,6 +26,16 @@
                                     target:self 
                                     action:@selector(refreshLogs)];
     self.navigationItem.rightBarButtonItem = refreshButton;
+    
+    // 注册日志更新通知
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                          selector:@selector(refreshLogs)
+                                              name:@"LogsUpdated"
+                                            object:nil];
+}
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)refreshLogs {
@@ -37,11 +47,12 @@
     if (logSpecifier) {
         if (logs.count > 0) {
             NSString *logText = [logs componentsJoinedByString:@"\n"];
-            [logSpecifier setProperty:logText forKey:@"staticText"];
+            [logSpecifier setProperty:logText forKey:@"staticTextMessage"];
+            [self reloadSpecifier:logSpecifier animated:YES];
         } else {
-            [logSpecifier setProperty:@"暂无日志" forKey:@"staticText"];
+            [logSpecifier setProperty:@"暂无日志" forKey:@"staticTextMessage"];
+            [self reloadSpecifier:logSpecifier animated:YES];
         }
-        [self reloadSpecifier:logSpecifier];
     }
 }
 

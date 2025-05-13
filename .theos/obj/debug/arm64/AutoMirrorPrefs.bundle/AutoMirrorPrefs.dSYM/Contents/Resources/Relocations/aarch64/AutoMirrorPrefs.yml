@@ -4,7 +4,8 @@ binary-path:     "/Users/zocodo/Desktop/越狱/ipadAutoMirrorDisplay/.theos/obj/
 relocations:
   - { offset: 0x1E, size: 0x8, addend: 0x0, symName: '-[AutoMirrorListController specifiers]', symObjAddr: 0x0, symBinAddr: 0x4000, symSize: 0xA0 }
   - { offset: 0x2616, size: 0x8, addend: 0x0, symName: '-[AutoMirrorListController specifiers]', symObjAddr: 0x0, symBinAddr: 0x4000, symSize: 0xA0 }
-  - { offset: 0x264C, size: 0x8, addend: 0x0, symName: '-[AutoMirrorListController viewDidLoad]', symObjAddr: 0xA0, symBinAddr: 0x40A0, symSize: 0xC8 }
-  - { offset: 0x268C, size: 0x8, addend: 0x0, symName: '-[AutoMirrorListController refreshLogs]', symObjAddr: 0x168, symBinAddr: 0x4168, symSize: 0x154 }
-  - { offset: 0x26EE, size: 0x8, addend: 0x0, symName: '-[AutoMirrorListController viewWillAppear:]', symObjAddr: 0x2BC, symBinAddr: 0x42BC, symSize: 0x64 }
+  - { offset: 0x264C, size: 0x8, addend: 0x0, symName: '-[AutoMirrorListController viewDidLoad]', symObjAddr: 0xA0, symBinAddr: 0x40A0, symSize: 0x114 }
+  - { offset: 0x268C, size: 0x8, addend: 0x0, symName: '-[AutoMirrorListController dealloc]', symObjAddr: 0x1B4, symBinAddr: 0x41B4, symSize: 0x74 }
+  - { offset: 0x26BE, size: 0x8, addend: 0x0, symName: '-[AutoMirrorListController refreshLogs]', symObjAddr: 0x228, symBinAddr: 0x4228, symSize: 0x174 }
+  - { offset: 0x2720, size: 0x8, addend: 0x0, symName: '-[AutoMirrorListController viewWillAppear:]', symObjAddr: 0x39C, symBinAddr: 0x439C, symSize: 0x64 }
 ...

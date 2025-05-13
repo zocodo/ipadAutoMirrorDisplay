@@ -1,4 +1,4 @@
-/Users/zocodo/Desktop/越狱/ipadAutoMirrorDisplay/.theos/obj/debug/arm64e/AutoMirrorPrefs.m.4f7e8b00.o: \
+/Users/zocodo/Desktop/越狱/ipadAutoMirrorDisplay/.theos/obj/debug/arm64/AutoMirrorPrefs.m.bac60502.o: \
   AutoMirrorPrefs.m /Users/zocodo/theos/Prefix.pch \
   /Users/zocodo/theos/vendor/include/Preferences/module.modulemap \
   /Users/zocodo/theos/vendor/include/Preferences/Preferences.h \

@@ -21,18 +21,26 @@
             <string>enabled</string>
             <key>label</key>
             <string>启用自动镜像</string>
+            <key>PostNotification</key>
+            <string>com.zocodo.ipad-auto-mirror-display/settingschanged</string>
         </dict>
         <dict>
             <key>cell</key>
             <string>PSGroupCell</string>
             <key>label</key>
-            <string>日志</string>
+            <string>运行日志</string>
+            <key>footerText</key>
+            <string>日志会自动更新，也可以点击右上角刷新按钮手动更新</string>
         </dict>
         <dict>
             <key>cell</key>
             <string>PSStaticTextCell</string>
             <key>id</key>
             <string>logView</string>
+            <key>label</key>
+            <string></string>
+            <key>height</key>
+            <integer>200</integer>
         </dict>
     </array>
     <key>title</key>

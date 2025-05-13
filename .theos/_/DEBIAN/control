@@ -4,7 +4,7 @@ Description: Automatically switch to mirror mode when external display is connec
 Maintainer: zocodo
 Author: zocodo
 Section: Tweaks
-Depends: mobilesubstrate (>= 0.9.5000)
-Architecture: iphoneos-arm
-Version: 0.0.1-1+debug
-Installed-Size: 344
+Depends: firmware (>= 14.0), preferenceloader
+Architecture: iphoneos-arm64
+Version: 0.0.1-8+debug
+Installed-Size: 368

@@ -4,20 +4,36 @@ binary-path:     "/Users/zocodo/Desktop/越狱/ipadAutoMirrorDisplay/.theos/obj/
 relocations:
   - { offset: 0x1E, size: 0x8, addend: 0x0, symName: '+[LogManager sharedInstance]', symObjAddr: 0x0, symBinAddr: 0x4000, symSize: 0x80 }
   - { offset: 0x2B, size: 0x8, addend: 0x0, symName: '+[LogManager sharedInstance]', symObjAddr: 0x0, symBinAddr: 0x4000, symSize: 0x80 }
-  - { offset: 0x54, size: 0x8, addend: 0x0, symName: _sharedInstance.instance, symObjAddr: 0x5178, symBinAddr: 0xC238, symSize: 0x0 }
-  - { offset: 0x69, size: 0x8, addend: 0x0, symName: _sharedInstance.onceToken, symObjAddr: 0x5180, symBinAddr: 0xC240, symSize: 0x0 }
-  - { offset: 0x182, size: 0x8, addend: 0x0, symName: '__logos_orig$_ungrouped$UIScreen$setMirrored$', symObjAddr: 0x5188, symBinAddr: 0xC248, symSize: 0x0 }
-  - { offset: 0xC23, size: 0x8, addend: 0x0, symName: '__logos_orig$_ungrouped$UIScreen$setCurrentMode$', symObjAddr: 0x5190, symBinAddr: 0xC250, symSize: 0x0 }
-  - { offset: 0xC4E, size: 0x8, addend: 0x0, symName: '__logos_orig$_ungrouped$UIScreen$_updateDisplayConnection', symObjAddr: 0x5198, symBinAddr: 0xC258, symSize: 0x0 }
-  - { offset: 0xD76, size: 0x8, addend: 0x0, symName: '___28+[LogManager sharedInstance]_block_invoke', symObjAddr: 0x80, symBinAddr: 0x4080, symSize: 0x44 }
-  - { offset: 0xD9E, size: 0x8, addend: 0x0, symName: '-[LogManager init]', symObjAddr: 0xC4, symBinAddr: 0x40C4, symSize: 0xD4 }
-  - { offset: 0xDD4, size: 0x8, addend: 0x0, symName: '-[LogManager addLog:]', symObjAddr: 0x198, symBinAddr: 0x4198, symSize: 0x1C8 }
-  - { offset: 0xE3E, size: 0x8, addend: 0x0, symName: '-[LogManager getLogs]', symObjAddr: 0x360, symBinAddr: 0x4360, symSize: 0x30 }
-  - { offset: 0xE74, size: 0x8, addend: 0x0, symName: '-[LogManager .cxx_destruct]', symObjAddr: 0x390, symBinAddr: 0x4390, symSize: 0x30 }
-  - { offset: 0xEA6, size: 0x8, addend: 0x0, symName: __logosLocalCtor_94b0abe3, symObjAddr: 0x3C0, symBinAddr: 0x43C0, symSize: 0xE8 }
-  - { offset: 0xEE6, size: 0x8, addend: 0x0, symName: ____logosLocalCtor_94b0abe3_block_invoke, symObjAddr: 0x4A8, symBinAddr: 0x44A8, symSize: 0x124 }
-  - { offset: 0xF38, size: 0x8, addend: 0x0, symName: __logosLocalInit, symObjAddr: 0x5CC, symBinAddr: 0x45CC, symSize: 0x88 }
-  - { offset: 0xF6A, size: 0x8, addend: 0x0, symName: '__logos_method$_ungrouped$UIScreen$setMirrored$', symObjAddr: 0x654, symBinAddr: 0x4654, symSize: 0x140 }
-  - { offset: 0xFAA, size: 0x8, addend: 0x0, symName: '__logos_method$_ungrouped$UIScreen$setCurrentMode$', symObjAddr: 0x794, symBinAddr: 0x4794, symSize: 0x84 }
-  - { offset: 0xFEA, size: 0x8, addend: 0x0, symName: '__logos_method$_ungrouped$UIScreen$_updateDisplayConnection', symObjAddr: 0x818, symBinAddr: 0x4818, symSize: 0x16C }
+  - { offset: 0x54, size: 0x8, addend: 0x0, symName: _sharedInstance.instance, symObjAddr: 0x92D8, symBinAddr: 0xC270, symSize: 0x0 }
+  - { offset: 0x69, size: 0x8, addend: 0x0, symName: _sharedInstance.onceToken, symObjAddr: 0x92E0, symBinAddr: 0xC278, symSize: 0x0 }
+  - { offset: 0x182, size: 0x8, addend: 0x0, symName: '__logos_orig$_ungrouped$UIScreen$setMirrored$', symObjAddr: 0x92E8, symBinAddr: 0xC280, symSize: 0x0 }
+  - { offset: 0xC23, size: 0x8, addend: 0x0, symName: '__logos_orig$_ungrouped$UIScreen$setCurrentMode$', symObjAddr: 0x92F0, symBinAddr: 0xC288, symSize: 0x0 }
+  - { offset: 0xC4E, size: 0x8, addend: 0x0, symName: '__logos_orig$_ungrouped$UIScreen$_updateDisplayConnection', symObjAddr: 0x92F8, symBinAddr: 0xC290, symSize: 0x0 }
+  - { offset: 0xC74, size: 0x8, addend: 0x0, symName: '__logos_orig$_ungrouped$SpringBoard$applicationDidFinishLaunching$', symObjAddr: 0x9300, symBinAddr: 0xC298, symSize: 0x0 }
+  - { offset: 0xCAF, size: 0x8, addend: 0x0, symName: '__logos_orig$_ungrouped$NSUserDefaults$setObject$forKey$', symObjAddr: 0x9308, symBinAddr: 0xC2A0, symSize: 0x0 }
+  - { offset: 0xD55, size: 0x8, addend: 0x0, symName: _tweakInitialized, symObjAddr: 0x9310, symBinAddr: 0xC2A8, symSize: 0x0 }
+  - { offset: 0xE73, size: 0x8, addend: 0x0, symName: '___28+[LogManager sharedInstance]_block_invoke', symObjAddr: 0x80, symBinAddr: 0x4080, symSize: 0x50 }
+  - { offset: 0xE9B, size: 0x8, addend: 0x0, symName: '-[LogManager init]', symObjAddr: 0xD0, symBinAddr: 0x40D0, symSize: 0x214 }
+  - { offset: 0xF02, size: 0x8, addend: 0x0, symName: '-[LogManager addLog:]', symObjAddr: 0x2E4, symBinAddr: 0x42E4, symSize: 0x2C8 }
+  - { offset: 0xF9D, size: 0x8, addend: 0x0, symName: '___21-[LogManager addLog:]_block_invoke', symObjAddr: 0x5AC, symBinAddr: 0x45AC, symSize: 0x124 }
+  - { offset: 0x1007, size: 0x8, addend: 0x0, symName: ___copy_helper_block_e8_32s40s, symObjAddr: 0x6D0, symBinAddr: 0x46D0, symSize: 0x58 }
+  - { offset: 0x102B, size: 0x8, addend: 0x0, symName: ___destroy_helper_block_e8_32s40s, symObjAddr: 0x728, symBinAddr: 0x4728, symSize: 0x44 }
+  - { offset: 0x1047, size: 0x8, addend: 0x0, symName: '-[LogManager getLogs]', symObjAddr: 0x76C, symBinAddr: 0x476C, symSize: 0x30 }
+  - { offset: 0x107D, size: 0x8, addend: 0x0, symName: '-[LogManager .cxx_destruct]', symObjAddr: 0x79C, symBinAddr: 0x479C, symSize: 0x30 }
+  - { offset: 0x10AF, size: 0x8, addend: 0x0, symName: __logosLocalCtor_31031d72, symObjAddr: 0x7CC, symBinAddr: 0x47CC, symSize: 0x74 }
+  - { offset: 0x10F3, size: 0x8, addend: 0x0, symName: __logosLocalInit, symObjAddr: 0x840, symBinAddr: 0x4840, symSize: 0xE8 }
+  - { offset: 0x1145, size: 0x8, addend: 0x0, symName: '__logos_method$_ungrouped$UIScreen$setMirrored$', symObjAddr: 0x928, symBinAddr: 0x4928, symSize: 0x398 }
+  - { offset: 0x1199, size: 0x8, addend: 0x0, symName: '__logos_method$_ungrouped$UIScreen$setCurrentMode$', symObjAddr: 0xCC0, symBinAddr: 0x4CC0, symSize: 0x1D4 }
+  - { offset: 0x11ED, size: 0x8, addend: 0x0, symName: '__logos_method$_ungrouped$UIScreen$_updateDisplayConnection', symObjAddr: 0xE94, symBinAddr: 0x4E94, symSize: 0x1D8 }
+  - { offset: 0x1247, size: 0x8, addend: 0x0, symName: '__logos_method$_ungrouped$SpringBoard$applicationDidFinishLaunching$', symObjAddr: 0x106C, symBinAddr: 0x506C, symSize: 0x388 }
+  - { offset: 0x12C3, size: 0x8, addend: 0x0, symName: '__logos_method$_ungrouped$NSUserDefaults$setObject$forKey$', symObjAddr: 0x13F4, symBinAddr: 0x53F4, symSize: 0x1BC }
+  - { offset: 0x1325, size: 0x8, addend: 0x0, symName: '____logos_method$_ungrouped$UIScreen$_updateDisplayConnection_block_invoke', symObjAddr: 0x15B0, symBinAddr: 0x55B0, symSize: 0x28 }
+  - { offset: 0x134D, size: 0x8, addend: 0x0, symName: _checkAndEnableMirrorMode, symObjAddr: 0x15D8, symBinAddr: 0x55D8, symSize: 0x690 }
+  - { offset: 0x13C2, size: 0x8, addend: 0x0, symName: ___checkAndEnableMirrorMode_block_invoke, symObjAddr: 0x1C68, symBinAddr: 0x5C68, symSize: 0x38 }
+  - { offset: 0x13FB, size: 0x8, addend: 0x0, symName: ___copy_helper_block_e8_32s, symObjAddr: 0x1CA0, symBinAddr: 0x5CA0, symSize: 0x38 }
+  - { offset: 0x141F, size: 0x8, addend: 0x0, symName: ___destroy_helper_block_e8_32s, symObjAddr: 0x1CD8, symBinAddr: 0x5CD8, symSize: 0x2C }
+  - { offset: 0x143B, size: 0x8, addend: 0x0, symName: '____logos_method$_ungrouped$SpringBoard$applicationDidFinishLaunching$_block_invoke', symObjAddr: 0x1D04, symBinAddr: 0x5D04, symSize: 0x1CC }
+  - { offset: 0x1499, size: 0x8, addend: 0x0, symName: '____logos_method$_ungrouped$SpringBoard$applicationDidFinishLaunching$_block_invoke_2', symObjAddr: 0x1ED0, symBinAddr: 0x5ED0, symSize: 0x28 }
+  - { offset: 0x14C1, size: 0x8, addend: 0x0, symName: '____logos_method$_ungrouped$SpringBoard$applicationDidFinishLaunching$_block_invoke_3', symObjAddr: 0x1EF8, symBinAddr: 0x5EF8, symSize: 0x28 }
+  - { offset: 0x14E9, size: 0x8, addend: 0x0, symName: '____logos_method$_ungrouped$NSUserDefaults$setObject$forKey$_block_invoke', symObjAddr: 0x1F20, symBinAddr: 0x5F20, symSize: 0x28 }
 ...

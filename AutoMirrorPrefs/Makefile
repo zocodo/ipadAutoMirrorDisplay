@@ -15,4 +15,4 @@ include $(THEOS_MAKE_PATH)/bundle.mk
 
 internal-stage::
 	$(ECHO_NOTHING)mkdir -p $(THEOS_STAGING_DIR)/Library/PreferenceLoader/Preferences$(ECHO_END)
-	$(ECHO_NOTHING)cp Resources/Preferences.plist $(THEOS_STAGING_DIR)/Library/PreferenceLoader/Preferences/AutoMirrorPrefs.plist$(ECHO_END) 
+	$(ECHO_NOTHING)cp ../Resources/Preferences.plist $(THEOS_STAGING_DIR)/Library/PreferenceLoader/Preferences/AutoMirrorPrefs.plist$(ECHO_END) 

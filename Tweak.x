@@ -32,3 +32,61 @@ the generation of a class list and an automatic constructor.
 // Always make sure you clean up after yourself; Not doing so could have grave consequences!
 %end
 */
+
+#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
+
+// 监听显示器连接状态
+%hook UIScreen
+
+- (void)setMirrored:(BOOL)mirrored {
+    %log; // 添加日志记录
+    %orig;
+}
+
+- (void)setCurrentMode:(UIScreenMode *)mode {
+    %log; // 添加日志记录
+    %orig;
+}
+
+%end
+
+// 监听显示器连接
+%hook UIScreen (DisplayConnection)
+
+- (void)_updateDisplayConnection {
+    %log; // 添加日志记录
+    %orig;
+    
+    // 获取所有屏幕
+    NSArray *screens = [UIScreen screens];
+    if (screens.count > 1) {
+        // 有外接显示器连接
+        UIScreen *mainScreen = [UIScreen mainScreen];
+        if (![mainScreen isMirrored]) {
+            // 如果当前不是镜像模式，则切换到镜像模式
+            NSLog(@"[iPad Auto Mirror] 检测到外接显示器，切换到镜像模式");
+            [mainScreen setMirrored:YES];
+        }
+    }
+}
+
+%end
+
+// 初始化
+%ctor {
+    @autoreleasepool {
+        NSLog(@"[iPad Auto Mirror] 插件已加载");
+        // 注册通知监听
+        [[NSNotificationCenter defaultCenter] addObserverForName:UIScreenDidConnectNotification 
+                                                        object:nil 
+                                                         queue:[NSOperationQueue mainQueue] 
+                                                    usingBlock:^(NSNotification *notification) {
+            UIScreen *mainScreen = [UIScreen mainScreen];
+            if (![mainScreen isMirrored]) {
+                NSLog(@"[iPad Auto Mirror] 通过通知检测到外接显示器，切换到镜像模式");
+                [mainScreen setMirrored:YES];
+            }
+        }];
+    }
+}

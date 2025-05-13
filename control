@@ -1,8 +1,8 @@
-Package: com.yourcompany.auto-display-mirror-mode
-Name: auto-display-mirror-mode
+Package: com.zocodo.ipad-auto-mirror-display
+Name: iPad Auto Mirror Display
 Version: 0.0.1
 Architecture: iphoneos-arm
-Description: An awesome MobileSubstrate tweak!
+Description: Automatically switch to mirror mode when external display is connected
 Maintainer: zocodo
 Author: zocodo
 Section: Tweaks

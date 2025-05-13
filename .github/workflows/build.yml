@@ -33,6 +33,10 @@ jobs:
           # 只下载 iOS 16.5 SDK
           curl -LO https://github.com/theos/sdks/raw/master/iPhoneOS16.5.sdk
           mv iPhoneOS16.5.sdk theos/sdks/
+          # 确保 SDK 目录结构正确
+          mkdir -p theos/sdks/iPhoneOS16.5.sdk/System/Library/Frameworks/UIKit.framework/Headers
+          # 创建符号链接
+          ln -sf /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/UIKit.framework/Headers/* theos/sdks/iPhoneOS16.5.sdk/System/Library/Frameworks/UIKit.framework/Headers/
 
       - name: Convert line endings
         run: |
@@ -49,11 +53,15 @@ jobs:
           THEOS_PLATFORM_SDK_NAME: iPhoneOS
           THEOS_PLATFORM_SDK_PATH: ${{ github.workspace }}/theos/sdks/iPhoneOS16.5.sdk
           THEOS_VERBOSE: 1
+          TARGET_OS_IPHONE: 1
+          TARGET_OS_IOS: 1
         run: |
           make package FINALPACKAGE=1 \
                THEOS_PACKAGE_SCHEME=rootless \
                INTERNAL_PACKAGE_METHOD=dpkg-deb \
-               THEOS_VERBOSE=1
+               THEOS_VERBOSE=1 \
+               TARGET_OS_IPHONE=1 \
+               TARGET_OS_IOS=1
 
       - name: Rename .deb
         id: rename

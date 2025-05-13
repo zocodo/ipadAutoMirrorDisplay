@@ -1,5 +1,5 @@
 ARCHS = arm64 arm64e
-TARGET := iphone:clang:latest:14.0
+TARGET := iphone:clang:16.5:14.0
 
 include $(THEOS)/makefiles/common.mk
 
@@ -8,6 +8,7 @@ BUNDLE_NAME = AutoMirrorPrefs
 AutoMirrorPrefs_FILES = AutoMirrorPrefs.m
 AutoMirrorPrefs_FRAMEWORKS = UIKit
 AutoMirrorPrefs_PRIVATE_FRAMEWORKS = Preferences
+AutoMirrorPrefs_LDFLAGS = -F$(THEOS)/sdks/iPhoneOS16.5.sdk/System/Library/PrivateFrameworks
 AutoMirrorPrefs_INSTALL_PATH = /Library/PreferenceBundles
 AutoMirrorPrefs_CFLAGS = -fobjc-arc
 

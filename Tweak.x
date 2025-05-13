@@ -86,6 +86,12 @@ the generation of a class list and an automatic constructor.
 
 @end
 
+// UIScreen分类声明
+@interface UIScreen (MirrorAdditions)
+- (BOOL)isMirrored;
+- (void)setMirrored:(BOOL)mirrored;
+@end
+
 // 监听显示器连接状态
 %hook UIScreen
 
@@ -105,7 +111,11 @@ the generation of a class list and an automatic constructor.
 %end
 
 // 监听显示器连接
-%hook UIScreen (DisplayConnection)
+@interface UIScreen (DisplayConnection)
+- (void)_updateDisplayConnection;
+@end
+
+%hook UIScreen
 
 - (void)_updateDisplayConnection {
     %log;

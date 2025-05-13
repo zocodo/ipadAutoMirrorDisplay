@@ -1,0 +1,10 @@
+---
+triple:          'arm64e-apple-darwin'
+binary-path:     "/Users/zocodo/Desktop/越狱/ipadAutoMirrorDisplay/.theos/obj/debug/arm64e/AutoMirrorPrefs.bundle/AutoMirrorPrefs"
+relocations:
+  - { offset: 0x1E, size: 0x8, addend: 0x0, symName: '-[AutoMirrorListController specifiers]', symObjAddr: 0x0, symBinAddr: 0x4000, symSize: 0xB4 }
+  - { offset: 0x2616, size: 0x8, addend: 0x0, symName: '-[AutoMirrorListController specifiers]', symObjAddr: 0x0, symBinAddr: 0x4000, symSize: 0xB4 }
+  - { offset: 0x264C, size: 0x8, addend: 0x0, symName: '-[AutoMirrorListController viewDidLoad]', symObjAddr: 0xB4, symBinAddr: 0x40B4, symSize: 0xCC }
+  - { offset: 0x268C, size: 0x8, addend: 0x0, symName: '-[AutoMirrorListController refreshLogs]', symObjAddr: 0x180, symBinAddr: 0x4180, symSize: 0x158 }
+  - { offset: 0x26EE, size: 0x8, addend: 0x0, symName: '-[AutoMirrorListController viewWillAppear:]', symObjAddr: 0x2D8, symBinAddr: 0x42D8, symSize: 0x68 }
+...

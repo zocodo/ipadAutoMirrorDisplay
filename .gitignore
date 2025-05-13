@@ -1,4 +1,5 @@
-package
+package/
 .vscode
 .DS_Store
 .idea
+.theos/

@@ -33,8 +33,7 @@ jobs:
           # 只下载 iOS 16.5 SDK
           curl -LO https://github.com/theos/sdks/raw/master/iPhoneOS16.5.sdk
           mv iPhoneOS16.5.sdk theos/sdks/
-          # 确保 SDK 目录结构正确
-          mkdir -p theos/sdks/iPhoneOS16.5.sdk/System/Library/Frameworks/UIKit.framework/Headers
+
           # 创建符号链接
           ln -sf /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/System/Library/Frameworks/UIKit.framework/Headers/* theos/sdks/iPhoneOS16.5.sdk/System/Library/Frameworks/UIKit.framework/Headers/
 

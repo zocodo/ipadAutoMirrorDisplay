@@ -1,0 +1,5 @@
+"ENABLED" = "启用自动镜像";
+"DISABLED" = "禁用自动镜像";
+"LOGS" = "日志";
+"NO_LOGS" = "暂无日志";
+"SETTINGS" = "设置"; 

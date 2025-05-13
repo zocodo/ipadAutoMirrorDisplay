@@ -1,12 +1,14 @@
-TARGET := iphone:clang:latest:7.0
-INSTALL_TARGET_PROCESSES = SpringBoard
-
+ARCHS = arm64 arm64e
+TARGET := iphone:clang:latest:14.0
 
 include $(THEOS)/makefiles/common.mk
 
-TWEAK_NAME = auto-display-mirror-mode
+TWEAK_NAME = AutoMirrorDisplay
 
-auto-display-mirror-mode_FILES = Tweak.x
-auto-display-mirror-mode_CFLAGS = -fobjc-arc
+AutoMirrorDisplay_FILES = Tweak.x
+AutoMirrorDisplay_CFLAGS = -fobjc-arc
 
 include $(THEOS_MAKE_PATH)/tweak.mk
+
+SUBPROJECTS += AutoMirrorPrefs
+include $(THEOS_MAKE_PATH)/aggregate.mk
